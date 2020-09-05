@@ -7,18 +7,22 @@ const SetFeedback = ({handleClick, text}) => (<button onClick={handleClick}>{tex
 const total = (a, b, c) => (a + b + c)
 
 //on Average good=1, neutral =0, bad = -1, so (good - bad) should do
-const Statistics = ({good, neutral, bad}) => {
-  return (
+const Statistics = ({good, neutral, bad}) => {  
+if (good || neutral || bad) {
+    return (
+      <>
+        <p>good {good}</p>
+        <p>neutral {neutral}</p>
+        <p>bad {bad}</p>
+        <p>all {total(good, neutral, bad)}</p>
+        <p>average {(good - bad) / total(good, neutral, bad)}</p> 
+        <p>positive {(good / total(good, neutral, bad))*100} %</p>
+    </> );
+  } else return (
     <>
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {total(good, neutral, bad)}</p>
-      <p>average {(good - bad) / total(good, neutral, bad)}</p> 
-      <p>positive {(good / total(good, neutral, bad))*100} %</p>
+      <p>No feedback given</p>
     </>
-  )
+  );
 }
 
 const App = () => {
@@ -33,7 +37,7 @@ const App = () => {
       <SetFeedback handleClick={() => setGood(good +1)} text = "good" />
       <SetFeedback handleClick={() => setNeutral(neutral + 1)} text = "neutral" />
       <SetFeedback handleClick={() => setBad(bad + 1)} text = "bad" />
-
+      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
