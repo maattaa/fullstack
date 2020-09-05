@@ -7,18 +7,19 @@ const SetFeedback = ({handleClick, text}) => (<button onClick={handleClick}>{tex
 const total = (a, b, c) => (a + b + c)
 
 //on Average good=1, neutral =0, bad = -1, so (good - bad) should do
+//having to repeat <p> </p> is only because of the %-sign in positive. Otherwise <p> would be in Statistic
 const Statistics = ({good, neutral, bad}) => {  
 
   let stats = <p>No feedback given</p>; 
   if (good || neutral || bad) {
     stats = (
       <>
-        <p><Statistic text="good" value={good} /></p>
-        <p><Statistic text="neutral" value={neutral} /></p>
-        <p><Statistic text="bad" value={bad} /></p>
-        <p><Statistic text="all" value={good+neutral+bad} /> </p>
-        <p><Statistic text="average" value={(good - bad) / total(good, neutral, bad)} /></p>
-        <p><Statistic text="positive" value={(good / total(good, neutral, bad))*100} /> %</p>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={good+neutral+bad} /> 
+        <Statistic text="average" value={(good - bad) / total(good, neutral, bad)} />
+        <Statistic text="positive" value={((good / total(good, neutral, bad))*100) + " %"} />
     </> );
   }
 
@@ -33,7 +34,7 @@ const Statistics = ({good, neutral, bad}) => {
 const Statistic = ({text, value}) => {
   return(
     <>
-      {text} {value}
+      <p>{text} {value}</p>
     </>
   )
 }
