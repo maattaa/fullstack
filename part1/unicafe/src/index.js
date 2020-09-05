@@ -13,12 +13,16 @@ const Statistics = ({good, neutral, bad}) => {
   if (good || neutral || bad) {
     stats = (
       <>
-        <Statistic text="good" value={good} />
-        <Statistic text="neutral" value={neutral} />
-        <Statistic text="bad" value={bad} />
-        <Statistic text="all" value={good+neutral+bad} /> 
-        <Statistic text="average" value={(good - bad) / total(good, neutral, bad)} />
-        <Statistic text="positive" value={((good / total(good, neutral, bad))*100) + " %"} />
+        <table>
+            <tbody>
+            <tr><Statistic text="good" value={good}/></tr>
+            <tr><Statistic text="neutral" value={neutral}/></tr>
+            <tr><Statistic text="bad" value={bad}/></tr>
+            <tr><Statistic text="all" value={good+neutral+bad}/></tr>
+            <tr><Statistic text="average" value={(good - bad) / total(good, neutral, bad)}/></tr>
+            <tr><Statistic text="positive" value={((good / total(good, neutral, bad))*100) + "%"}/></tr>
+          </tbody>
+        </table>
     </> );
   };
 
@@ -30,8 +34,13 @@ const Statistics = ({good, neutral, bad}) => {
     );
 };
 
-const Statistic = ({text, value}) => <p>{text} {value}</p>;
-
+const Statistic = ({text, value}) => {
+  return (
+    <>
+      <td>{text}</td><td>{value}</td>
+    </>
+  )
+  }
 const App = () => {
   // save clicks of each button to own state
   const [good, setGood] = useState(0);
