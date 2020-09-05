@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const SetFeedback = ({handleClick, text}) => (<button onClick={handleClick}>{text}</button>)
+const SetFeedback = ({handleClick, text}) => (<button onClick={handleClick}>{text}</button>);
 
 //total of feedbacks
-const total = (a, b, c) => (a + b + c)
+const total = (a, b, c) => (a + b + c);
 
 //on Average good=1, neutral =0, bad = -1, so (good - bad) should do
 const Statistics = ({good, neutral, bad}) => {  
@@ -20,7 +20,7 @@ const Statistics = ({good, neutral, bad}) => {
         <Statistic text="average" value={(good - bad) / total(good, neutral, bad)} />
         <Statistic text="positive" value={((good / total(good, neutral, bad))*100) + " %"} />
     </> );
-  }
+  };
 
   return (
       <>
@@ -28,9 +28,9 @@ const Statistics = ({good, neutral, bad}) => {
         {stats}
       </>
     );
-}
+};
 
-const Statistic = ({text, value}) => <p>{text} {value}</p>
+const Statistic = ({text, value}) => <p>{text} {value}</p>;
 
 const App = () => {
   // save clicks of each button to own state
@@ -51,4 +51,4 @@ const App = () => {
 
 ReactDOM.render(<App />, 
   document.getElementById('root')
-)
+);
