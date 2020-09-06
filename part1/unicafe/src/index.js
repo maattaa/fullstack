@@ -20,7 +20,7 @@ const Statistics = ({good, neutral, bad}) => {
             <tr><Statistic text="bad" value={bad}/></tr>
             <tr><Statistic text="all" value={good+neutral+bad}/></tr>
             <tr><Statistic text="average" value={(good - bad) / total(good, neutral, bad)}/></tr>
-            <tr><Statistic text="positive" value={((good / total(good, neutral, bad))*100) + "%"}/></tr>
+            <tr><Statistic text="positive" value={((good / total(good, neutral, bad))*100) + " %"}/></tr>
           </tbody>
         </table>
     </> );
