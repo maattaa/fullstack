@@ -17,22 +17,25 @@ const Anecdote = ({anecdote, votes}) => {
 const App = (props) => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(new Array(props.anecdotes.length).fill(0));
+  //maxVotes is the number of anecdote that has the most votes
   const [maxVotes, setMaxVotes] = useState(0);
 
+  //event handler to update votes
   const addVote =() => {
     const newVotes = [...votes]
     newVotes[selected]+=1
-    maxVote()
     setVotes(newVotes)
-  }
+    maxVote()
+  };
 
+  //check if current anecdote has more votes than the previous most voted
   const maxVote = () => {
     if (votes[selected] >= votes[maxVotes]) (
       setMaxVotes(selected)
-    )
-  }
+    );
+  };
 
-  const nextAnecdote = () => setSelected(Math.floor(Math.random() * (anecdotes.length)))
+  const nextAnecdote = () => setSelected(Math.floor(Math.random() * (anecdotes.length)));
 
   return (
     <div>
@@ -40,12 +43,11 @@ const App = (props) => {
       <Anecdote anecdote={props.anecdotes[selected]} votes={votes[selected]} />
       <Button handleClick={() => addVote()} text = "vote" />
       <Button handleClick={() => nextAnecdote()} text = "next anecdote" />
-      
       <h1>Anecdote with most votes</h1>
       <Anecdote anecdote={props.anecdotes[maxVotes]} votes={votes[maxVotes]} />
     </div>
-  )
-}
+  );
+};
 
 const anecdotes = [
   'If it hurts, do it more often',
