@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Button = ({handleClick, text}) => (
+const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>{text}</button>
-  );
+);
 
-const Anecdote = ({anecdote, votes}) => {
+const Anecdote = ({ anecdote, votes }) => {
   return (
     <>
       <p>{anecdote}</p>
@@ -21,9 +21,9 @@ const App = (props) => {
   const [maxVotes, setMaxVotes] = useState(0);
 
   //event handler to update votes
-  const addVote =() => {
+  const addVote = () => {
     const newVotes = [...votes]
-    newVotes[selected]+=1
+    newVotes[selected] += 1
     setVotes(newVotes)
     maxVote()
   };
@@ -41,8 +41,8 @@ const App = (props) => {
     <div>
       <h1>Anecdote of the day</h1>
       <Anecdote anecdote={props.anecdotes[selected]} votes={votes[selected]} />
-      <Button handleClick={() => addVote()} text = "vote" />
-      <Button handleClick={() => nextAnecdote()} text = "next anecdote" />
+      <Button handleClick={() => addVote()} text="vote" />
+      <Button handleClick={() => nextAnecdote()} text="next anecdote" />
       <h1>Anecdote with most votes</h1>
       <Anecdote anecdote={props.anecdotes[maxVotes]} votes={votes[maxVotes]} />
     </div>
