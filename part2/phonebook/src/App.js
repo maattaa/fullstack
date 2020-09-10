@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 //added below
 import Search from './components/search';
 import EntryForm from './components/entryForm';
 import Results from './components/results';
+import axios from 'axios'
+
+
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456' },
-        { name: 'Ada Lovelace', number: '39-44-5323523' },
-        { name: 'Dan Abramov', number: '12-43-234345' },
-        { name: 'Mary Poppendieck', number: '39-23-6423122' }
-    ])
+    const [persons, setPersons] = useState([])
 
     //loop over name input
     const [newName, setNewName] = useState('')
@@ -18,6 +16,16 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     //loop over search
     const [search, setSearch] = useState('')
+
+    useEffect(() => {
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => {
+                setPersons(response.data)
+            })
+    }, [])
+
+
 
     const addPerson = (event) => {
         event.preventDefault()
