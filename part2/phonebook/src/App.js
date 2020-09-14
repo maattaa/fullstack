@@ -3,13 +3,10 @@ import React, { useState, useEffect } from 'react'
 import Search from './components/search';
 import EntryForm from './components/entryForm';
 import Results from './components/results';
-import axios from 'axios'
-
-
+import personService from './services/persons';
 
 const App = () => {
     const [persons, setPersons] = useState([])
-
     //loop over name input
     const [newName, setNewName] = useState('')
     //loop over phonenumber
@@ -18,29 +15,31 @@ const App = () => {
     const [search, setSearch] = useState('')
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                setPersons(response.data)
-            })
+
+        personService
+            .getAll()
+            .then(response =>
+                setPersons(response))
     }, [])
-
-
 
     const addPerson = (event) => {
         event.preventDefault()
         const newObject = {
             name: newName,
-            number: newNumber
+            number: newNumber,
+            //find current largest ID in persons and increment it by 1
+            id: persons.reduce((max, person) => (person.id > max ? person.id : max), persons[0].id  ) +1
         };
         if (persons.some(person => person.name.toLowerCase() === newName.toLowerCase())) {
-          window.alert(`${newName} is already added to phonebook`)
+            window.alert(`${newName} is already added to phonebook`)
         } else {
-          setPersons(persons.concat(newObject))
-          setNewName('')
-          setNewNumber('')
+            personService.create(newObject)
+                .then(
+                    setNewName(''),
+                    setNewNumber(''),
+                    setPersons(persons.concat(newObject)))
         };
-      };
+    };
 
     const handleNewName = (event) => {
         setNewName(event.target.value)
