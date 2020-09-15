@@ -15,7 +15,6 @@ const App = () => {
     const [search, setSearch] = useState('')
 
     useEffect(() => {
-
         personService
             .getAll()
             .then(response =>
@@ -59,11 +58,18 @@ const App = () => {
             <Search search={search} handleSearch={handleSearch} />
 
             <h2>Add a new</h2>
-            <EntryForm addPerson={addPerson} handleNewName={handleNewName} handleNewNumber={handleNewNumber}
-                newName={newName} newNumber={newNumber} />
+            <EntryForm 
+                addPerson={addPerson} 
+                handleNewName={handleNewName} 
+                handleNewNumber={handleNewNumber}
+                newName={newName} 
+                newNumber={newNumber} />
 
             <h2>Numbers</h2>
-            <Results search={search} persons={persons} />
+            <Results 
+                search={search} 
+                persons={persons} 
+                setPersons={setPersons}/>
         </div >
     )
 }

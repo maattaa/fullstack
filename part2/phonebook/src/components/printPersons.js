@@ -1,8 +1,14 @@
 import React from 'react';
 import PrintPerson from './printPerson';
 
-const PrintPersons = ({ printPersons }) => (
-    printPersons.map((printPersons) => <PrintPerson person={printPersons} />)
-  );
+const PrintPersons = ({ printPersons, setPersons }) => (
+  printPersons.map((printPerson) =>
+    <PrintPerson
+      key={printPerson.id}
+      person={printPerson}
+      setPersons={setPersons}
+      persons={printPersons}
+    />)
+);
 
 export default PrintPersons;
