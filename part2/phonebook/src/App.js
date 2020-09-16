@@ -23,21 +23,31 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        const newObject = {
-            name: newName,
-            number: newNumber,
-            //find current largest ID in persons and increment it by 1
-            id: persons.reduce((max, person) => (person.id > max ? person.id : max), persons[0].id  ) +1
-        };
-        if (persons.some(person => person.name.toLowerCase() === newName.toLowerCase())) {
-            window.alert(`${newName} is already added to phonebook`)
-        } else {
-            personService.create(newObject)
+
+        const personExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
+        const existingPerson = personExists ?
+            { ...persons.find(person => person.name.toLowerCase() === newName.toLowerCase()), number: newNumber }
+            :
+            {
+                name: newName,
+                number: newNumber,
+                //find current largest ID in persons and increment it by 1
+                id: persons.reduce((max, person) => (person.id > max ? person.id : max), persons[0].id) + 1
+            }
+
+        personExists ?
+            window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`) &&
+                (personService.update(existingPerson.id, existingPerson)
+                    .then(setPersons(persons.map(person => person.name.toLowerCase() !== existingPerson.name.toLowerCase() ? person : existingPerson)),
+                        setNewName(''),
+                        setNewNumber('')))
+            :
+            (personService.create(existingPerson)
                 .then(
                     setNewName(''),
                     setNewNumber(''),
-                    setPersons(persons.concat(newObject)))
-        };
+                    setPersons(persons.concat(existingPerson))))
+
     };
 
     const handleNewName = (event) => {
@@ -58,18 +68,18 @@ const App = () => {
             <Search search={search} handleSearch={handleSearch} />
 
             <h2>Add a new</h2>
-            <EntryForm 
-                addPerson={addPerson} 
-                handleNewName={handleNewName} 
+            <EntryForm
+                addPerson={addPerson}
+                handleNewName={handleNewName}
                 handleNewNumber={handleNewNumber}
-                newName={newName} 
+                newName={newName}
                 newNumber={newNumber} />
 
             <h2>Numbers</h2>
-            <Results 
-                search={search} 
-                persons={persons} 
-                setPersons={setPersons}/>
+            <Results
+                search={search}
+                persons={persons}
+                setPersons={setPersons} />
         </div >
     )
 }
