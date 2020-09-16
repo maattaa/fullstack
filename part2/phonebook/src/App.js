@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-//added below
 import Search from './components/search';
 import EntryForm from './components/entryForm';
 import Results from './components/results';
+import Notification from './components/notification';
+import ErrorMessage from './components/errorMessage';
 import personService from './services/persons';
+
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -13,6 +15,8 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     //loop over search
     const [search, setSearch] = useState('')
+    const [notification, setNotification] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() => {
         personService
@@ -37,16 +41,27 @@ const App = () => {
 
         personExists ?
             window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`) &&
-                (personService.update(existingPerson.id, existingPerson)
-                    .then(setPersons(persons.map(person => person.name.toLowerCase() !== existingPerson.name.toLowerCase() ? person : existingPerson)),
-                        setNewName(''),
-                        setNewNumber('')))
+            (personService.update(existingPerson.id, existingPerson)
+                .then((setPersons(persons.map(person => person.name.toLowerCase() !== existingPerson.name.toLowerCase() ? person : existingPerson)),
+                    setNewName(''),
+                    setNewNumber(''))))
+                .catch(error => {
+                    setErrorMessage(`Information of ${existingPerson.name} has already been removed from server`)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                })
             :
             (personService.create(existingPerson)
                 .then(
                     setNewName(''),
                     setNewNumber(''),
-                    setPersons(persons.concat(existingPerson))))
+                    setPersons(persons.concat(existingPerson)),
+                    setNotification(`Added ${existingPerson.name}`),
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000)
+                ))
 
     };
 
@@ -65,6 +80,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notification} />
+            <ErrorMessage message={errorMessage} />
             <Search search={search} handleSearch={handleSearch} />
 
             <h2>Add a new</h2>
