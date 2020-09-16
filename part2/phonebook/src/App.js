@@ -6,6 +6,8 @@ import Notification from './components/notification';
 import ErrorMessage from './components/errorMessage';
 import personService from './services/persons';
 
+//Notifications are styled with index.css while errorMessages 
+//are with inline design in ./components/errorMessage.js
 
 const App = () => {
     const [persons, setPersons] = useState([])
