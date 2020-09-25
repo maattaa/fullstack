@@ -30,21 +30,33 @@ const App = () => {
     const addPerson = (event) => {
         event.preventDefault()
 
-        const personExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
-        const existingPerson = personExists ?
-            { ...persons.find(person => person.name.toLowerCase() === newName.toLowerCase()), number: newNumber }
+        const personExists = persons.some
+            (person => person.name.toLowerCase() === newName.toLowerCase())
+
+        const existingPerson = personExists
+            ?
+            {
+                ...persons.find
+                    (person => person.name.toLowerCase() === newName.toLowerCase()), number: newNumber
+            }
             :
             {
                 name: newName,
                 number: newNumber,
                 //find current largest ID in persons and increment it by 1
-                id: persons.reduce((max, person) => (person.id > max ? person.id : max), persons[0].id) + 1
+                //off because of letting Mongo to take care of it in part3!
+                //id: persons.reduce((max, person) => (person.id > max ? person.id : max), persons[0].id) + 1
             }
 
         personExists ?
             window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`) &&
             (personService.update(existingPerson.id, existingPerson)
-                .then((setPersons(persons.map(person => person.name.toLowerCase() !== existingPerson.name.toLowerCase() ? person : existingPerson)),
+                .then
+                ((setPersons
+                    (persons.map(person =>
+                        person.name.toLowerCase() !== existingPerson.name.toLowerCase()
+                            ? person
+                            : existingPerson)),
                     setNewName(''),
                     setNewNumber(''))))
                 .catch(error => {
@@ -54,16 +66,24 @@ const App = () => {
                     }, 5000)
                 })
             :
-            (personService.create(existingPerson)
-                .then(
-                    setNewName(''),
-                    setNewNumber(''),
-                    setPersons(persons.concat(existingPerson)),
-                    setNotification(`Added ${existingPerson.name}`),
+            (personService
+                .create(existingPerson)
+                .then(createdPerson => {
+                    setNewName('')
+                    setNewNumber('')
+                    setPersons(persons.concat(createdPerson))
+                    setNotification(`Added ${createdPerson.name}`)
                     setTimeout(() => {
                         setNotification(null)
                     }, 5000)
-                ))
+                })
+                .catch(error => {
+                    setErrorMessage(error.response.data.error)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                })
+            )
 
     };
 
