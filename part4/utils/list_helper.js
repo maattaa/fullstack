@@ -1,5 +1,4 @@
-const { xor } = require('lodash')
-const lodash = require('lodash')
+require('lodash')
 
 const dummy = () => 1
 
@@ -29,9 +28,11 @@ const favoriteBlog = array => {
     : { author, title, likes }
 }
 
+//TODO: Exc 4.6 and 4.7
 const mostBlogs = array => {
   return undefined
 }
+
 
 module.exports = {
   dummy,
