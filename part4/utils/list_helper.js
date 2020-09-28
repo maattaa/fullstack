@@ -3,7 +3,6 @@ require('lodash')
 const dummy = () => 1
 
 const totalLikes = array => {
-
   const reducer = (sum, item) => {
     return sum + item.likes
   }
@@ -14,7 +13,6 @@ const totalLikes = array => {
 }
 
 const favoriteBlog = array => {
-
   const reducer = (favorite, item) => {
     return !favorite || item.likes > favorite.likes
       ? item
