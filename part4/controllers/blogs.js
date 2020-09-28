@@ -16,9 +16,15 @@ blogsRouter.post('/', async (request, response) => {
     url: body.url,
     likes: body.likes
   })
-  const savedBlog = await blog.save()
-  response.status(201)
-    .json(savedBlog)
+
+  if (body.title === '' || body.url === '') {
+    response.status(400)
+      .json(body)
+  } else {
+    const savedBlog = await blog.save()
+    response.status(201)
+      .json(savedBlog)
+  }
 })
 
 

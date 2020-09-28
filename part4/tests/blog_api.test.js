@@ -71,6 +71,33 @@ test('Posting without likes', async () => {
   })
 })
 
+test('Posting without title', async () => {
+  const blogTitless = {
+    'title': '',
+    'author': 'author',
+    'url': 'https://github.com/maattaa/fullstack/tree/master/part4',
+    'likes': 12
+  }
+  await api
+    .post('/api/blogs')
+    .send(blogTitless)
+    .expect(400)
+})
+
+test('Posting without URL', async () => {
+  const blogUrless = {
+    'title': 'This shouldnt go through without url...',
+    'author': 'author',
+    'url': '',
+    'likes': 15
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogUrless)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
