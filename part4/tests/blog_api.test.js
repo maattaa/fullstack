@@ -65,7 +65,7 @@ test('Posting without likes', async () => {
   expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length + 1)
   const newestBlogs = await helper.newBlogsInDb()
   //Support to verify multiple blogs, although we are currently
-  //sending a single object, not an array
+  //sending a single object, not an array of objects
   newestBlogs.map(blog => {
     expect(blog.likes).toEqual(0)
   })
@@ -95,8 +95,22 @@ test('Posting without URL', async () => {
   await api
     .post('/api/blogs')
     .send(blogUrless)
-    .expect(400)
+    .expect(201)
+
+
 })
+
+test('Delete a post', async () => {
+  const blogToDelete = helper.initialBlogs[0]._id
+
+  await api
+    .delete(`/api/blogs/${blogToDelete}`)
+    .expect(204)
+
+  const newestBlogs = await helper.blogsInDb()
+  expect(newestBlogs.length === helper.initialBlogs.length - blogToDelete.length)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()
