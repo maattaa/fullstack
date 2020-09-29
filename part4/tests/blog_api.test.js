@@ -51,7 +51,7 @@ describe('Posting...', () => {
     )
   })
 
-  test('...without likes', async () => {
+  test('...without likes, should default to 0', async () => {
     const newBlog = {
       'title': 'title',
       'author': 'author',
@@ -73,7 +73,7 @@ describe('Posting...', () => {
     })
   })
 
-  test('...without title', async () => {
+  test('...without title, should fail', async () => {
     const blogTitless = {
       'title': '',
       'author': 'author',
@@ -86,7 +86,7 @@ describe('Posting...', () => {
       .expect(400)
   })
 
-  test('...without URL', async () => {
+  test('...without URL, should fail', async () => {
     const blogUrless = {
       'title': 'This shouldnt go through without url...',
       'author': 'author',
@@ -120,7 +120,7 @@ test('Update blog likes', async () => {
     .put(`/api/blogs/${blogToUpdate.id}`)
     .send(
       {
-        likes: 300
+        likes: blogToUpdate.likes + 600
       }
     )
     .expect(400)
