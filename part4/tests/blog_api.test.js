@@ -28,78 +28,78 @@ test('Check that empty array returns nothing', async () => {
   })
 })
 
-test('Posting works', async () => {
-  const newBlog = {
-    title: 'title',
-    author: 'author',
-    url: 'uniform resource locator',
-    likes: 4
-  }
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
+describe('Posting...', () => {
 
-  const blogsAfterPost = await helper.blogsInDb()
-  expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length + 1)
+  test('...works', async () => {
+    const newBlog = {
+      title: 'title',
+      author: 'author',
+      url: 'uniform resource locator',
+      likes: 4
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
 
-  const urls = blogsAfterPost.map(n => n.url)
-  expect(urls).toContain(
-    'uniform resource locator'
-  )
-})
+    const blogsAfterPost = await helper.blogsInDb()
+    expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length + 1)
 
-test('Posting without likes', async () => {
-  const newBlog = {
-    'title': 'title',
-    'author': 'author',
-    'url': 'https://github.com/maattaa/fullstack/tree/master/part4'
-  }
+    const urls = blogsAfterPost.map(n => n.url)
+    expect(urls).toContain(
+      'uniform resource locator'
+    )
+  })
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
+  test('...without likes', async () => {
+    const newBlog = {
+      'title': 'title',
+      'author': 'author',
+      'url': 'https://github.com/maattaa/fullstack/tree/master/part4'
+    }
 
-  const blogsAfterPost = await helper.blogsInDb()
-  expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length + 1)
-  const newestBlogs = await helper.newBlogsInDb()
-  //Support to verify multiple blogs, although we are currently
-  //sending a single object, not an array of objects
-  newestBlogs.map(blog => {
-    expect(blog.likes).toEqual(0)
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+    const blogsAfterPost = await helper.blogsInDb()
+    expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length + 1)
+    const newestBlogs = await helper.newBlogsInDb()
+    //Support to verify multiple blogs, although we are currently
+    //sending a single object, not an array of objects
+    newestBlogs.map(blog => {
+      expect(blog.likes).toEqual(0)
+    })
+  })
+
+  test('...without title', async () => {
+    const blogTitless = {
+      'title': '',
+      'author': 'author',
+      'url': 'https://github.com/maattaa/fullstack/tree/master/part4',
+      'likes': 12
+    }
+    await api
+      .post('/api/blogs')
+      .send(blogTitless)
+      .expect(400)
+  })
+
+  test('...without URL', async () => {
+    const blogUrless = {
+      'title': 'This shouldnt go through without url...',
+      'author': 'author',
+      'url': '',
+      'likes': 15
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(blogUrless)
+      .expect(400)
   })
 })
-
-test('Posting without title', async () => {
-  const blogTitless = {
-    'title': '',
-    'author': 'author',
-    'url': 'https://github.com/maattaa/fullstack/tree/master/part4',
-    'likes': 12
-  }
-  await api
-    .post('/api/blogs')
-    .send(blogTitless)
-    .expect(400)
-})
-
-test('Posting without URL', async () => {
-  const blogUrless = {
-    'title': 'This shouldnt go through without url...',
-    'author': 'author',
-    'url': '',
-    'likes': 15
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(blogUrless)
-    .expect(201)
-
-
-})
-
 test('Delete a post', async () => {
   const blogToDelete = helper.initialBlogs[0]._id
 
@@ -111,6 +111,28 @@ test('Delete a post', async () => {
   expect(newestBlogs.length === helper.initialBlogs.length - blogToDelete.length)
 })
 
+test('Update blog likes', async () => {
+
+  const initialBlogs = await helper.blogsInDb()
+  const blogToUpdate = initialBlogs[0]
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(
+      {
+        likes: 300
+      }
+    )
+    .expect(400)
+
+  const updatedBlogs = await helper.blogsInDb()
+
+  const updatedBlog = updatedBlogs.filter(blog => {
+    blog.id === blogToUpdate.id
+  })
+
+  expect(updatedBlog.likes !== blogToUpdate.likes)
+})
 
 afterAll(() => {
   mongoose.connection.close()
