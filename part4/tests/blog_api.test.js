@@ -4,6 +4,14 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
+//This user is used to tests that require authentication
+const testuser = {
+  username: 'testuser',
+  name: 'testname',
+  password: 'testpassword'
+}
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -21,6 +29,7 @@ test('Blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+//Cant figure out the purpose of this test??
 test('Check that empty array returns nothing', async () => {
   const blogs = await api.get('/api/blogs')
   blogs.body.map(blog => {
@@ -28,7 +37,17 @@ test('Check that empty array returns nothing', async () => {
   })
 })
 
-describe('Posting...', () => {
+describe('Operations that require authentication', () => {
+
+  beforeEach(async () => {
+    await api
+      .post('/api/users')
+      .send(testuser)
+  })
+
+  afterEach(async () => {
+    await User.findOneAndDelete({ username: testuser.username })
+  })
 
   test('...works', async () => {
     const newBlog = {
@@ -37,8 +56,15 @@ describe('Posting...', () => {
       url: 'uniform resource locator',
       likes: 4
     }
+
+    const getToken = await api
+      .post('/api/login')
+      .send(testuser)
+    const token = getToken.body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201)
 
@@ -58,8 +84,14 @@ describe('Posting...', () => {
       'url': 'https://github.com/maattaa/fullstack/tree/master/part4'
     }
 
+    const getToken = await api
+      .post('/api/login')
+      .send(testuser)
+    const token = getToken.body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201)
 
@@ -80,8 +112,15 @@ describe('Posting...', () => {
       'url': 'https://github.com/maattaa/fullstack/tree/master/part4',
       'likes': 12
     }
+
+    const getToken = await api
+      .post('/api/login')
+      .send(testuser)
+    const token = getToken.body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(blogTitless)
       .expect(400)
   })
@@ -94,23 +133,48 @@ describe('Posting...', () => {
       'likes': 15
     }
 
+    const getToken = await api
+      .post('/api/login')
+      .send(testuser)
+    const token = getToken.body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(blogUrless)
       .expect(400)
   })
+
+  test('Delete a post', async () => {
+
+    const freshBlogToDelete = {
+      'title': 'Removed soon',
+      'author': testuser.name,
+      'url': 'www.google.com',
+      'likes': 15
+    }
+
+    const getToken = await api
+      .post('/api/login')
+      .send(testuser)
+    const token = getToken.body.token
+
+    const newBlog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(freshBlogToDelete)
+      .expect(201)
+
+
+    await api
+      .delete(`/api/blogs/${newBlog.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(204)
+
+    const newestBlogs = await helper.blogsInDb()
+    expect(newestBlogs.length === helper.initialBlogs.length - freshBlogToDelete.length)
+  })
 })
-test('Delete a post', async () => {
-  const blogToDelete = helper.initialBlogs[0]._id
-
-  await api
-    .delete(`/api/blogs/${blogToDelete}`)
-    .expect(204)
-
-  const newestBlogs = await helper.blogsInDb()
-  expect(newestBlogs.length === helper.initialBlogs.length - blogToDelete.length)
-})
-
 test('Update blog likes', async () => {
 
   const initialBlogs = await helper.blogsInDb()
@@ -126,7 +190,6 @@ test('Update blog likes', async () => {
     .expect(400)
 
   const updatedBlogs = await helper.blogsInDb()
-
   const updatedBlog = updatedBlogs.filter(blog => {
     blog.id === blogToUpdate.id
   })
