@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import {Notification, ErrorMessage} from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [notification, setNotification] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+
   //  const [errorMessage, setErrorMessage] = useState()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -29,6 +33,19 @@ const App = () => {
     }
   }, [])
 
+  const notifyWith = (message) => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
+  }
+
+  const errorWith = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage('')
+    }, 5000)
+  }
   const handleLogin = async (event) => {
     event.preventDefault()
     //
@@ -47,6 +64,7 @@ const App = () => {
       setPassword('')
     }
     catch (exception) {
+      errorWith('Wront username or password!')
       console.log('wrong creds!')
       //   setErrorMessage('Wrong credentials')
       //   setTimeout(() => {
@@ -68,29 +86,32 @@ const App = () => {
   const handlePost = async (event) => {
     event.preventDefault()
     if (user) {
-    try {
-      const postedBlog = await blogService.create({
-        title: blogTitle,
-        author: blogAuthor,
-        url: blogUrl
-      })
-      setBlogs(blogs.concat(postedBlog))
+      try {
+        const postedBlog = await blogService.create({
+          title: blogTitle,
+          author: blogAuthor,
+          url: blogUrl
+        })
+        setBlogs(blogs.concat(postedBlog))
+        notifyWith(`a new blog ${postedBlog.title} added`)
+      }
+      catch (exception) {
+        console.log('Posting failed')
+      }
+    } else {
+      errorWith('Log in first!')
+      setBlogTitle('')
+      setBlogAuthor('')
+      setBlogUrl('')
     }
-    catch (exception) {
-      console.log('Posting failed')
-    }
-  } else {
-    console.log('Log in first')
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('')
-  }
   }
 
   const LoginForm = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <ErrorMessage message={errorMessage} />
+        <Notification message={notification} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -126,6 +147,8 @@ const App = () => {
     return (
       <div>
         <h2>Blogs</h2>
+        <ErrorMessage message={errorMessage} />
+        <Notification message={notification} />
         <p>{user.name} logged in
       <button onClick={() => handleLogOut()} >
             logout
