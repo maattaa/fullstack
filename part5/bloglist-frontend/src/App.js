@@ -5,7 +5,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState()
+//  const [errorMessage, setErrorMessage] = useState()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -19,19 +19,21 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
-    try {
+    // try 
+    // {
       const user = await loginService.login({
         username, password,
       })
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
+    // }
+    //  catch (exception) {
+    //   setErrorMessage('Wrong credentials')
+    //   setTimeout(() => {
+    //     setErrorMessage(null)
+    //   }, 5000)
+    // }
   }
 
 
