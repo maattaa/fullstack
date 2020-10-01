@@ -5,7 +5,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-//  const [errorMessage, setErrorMessage] = useState()
+  //  const [errorMessage, setErrorMessage] = useState()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -16,28 +16,50 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
+    //
+    //Remove the bad practice password printing when no longer needed!
+    //
     console.log('logging in with', username, password)
-    // try 
-    // {
+    try {
       const user = await loginService.login({
         username, password,
       })
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
-    // }
-    //  catch (exception) {
-    //   setErrorMessage('Wrong credentials')
-    //   setTimeout(() => {
-    //     setErrorMessage(null)
-    //   }, 5000)
-    // }
+    }
+    catch (exception) {
+      console.log('wrong creds!')
+      //   setErrorMessage('Wrong credentials')
+      //   setTimeout(() => {
+      //     setErrorMessage(null)
+      //   }, 5000)
+    }
   }
 
+  const handleLogOut = () => {
 
-  if (user === null) {
+    window.localStorage.removeItem('loggedUser')
+    setUser('')
+    setUsername('')
+    setPassword('')
+    setBlogs([])
+  }
+
+  const LoginForm = () => {
     return (
       <div>
         <h2>Log in to application</h2>
@@ -66,46 +88,28 @@ const App = () => {
     )
   }
 
-  return (
-    <div>
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
+  if (user === null) {
+    return (
+      <>
+        {LoginForm()}
+      </>
+    )
+  } else {
 
-  // return (
-  //   <div>
-  //     <h2>blogs</h2>
+    return (
+      <div>
+        <h2>blogs</h2>
+        <p>{user.name} logged in
+      <button onClick={() => handleLogOut()} >
+            logout
+      </button></p>
 
-  //     <form onSubmit={handleLogin}>
-  //       <div>
-  //         username
-  //           <input
-  //           type="text"
-  //           value={username}
-  //           name="Username"
-  //           onChange={({ target }) => setUsername(target.value)}
-  //         />
-  //       </div>
-  //       <div>
-  //         password
-  //           <input
-  //           type="password"
-  //           value={password}
-  //           name="Password"
-  //           onChange={({ target }) => setPassword(target.value)}
-  //         />
-  //       </div>
-  //       <button type="submit">login</button>
-  //     </form>
-
-  //     {blogs.map(blog =>
-  //       <Blog key={blog.id} blog={blog} />
-  //     )}
-  //   </div>
-  // )
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
+    )
+  }
 }
 
 export default App
