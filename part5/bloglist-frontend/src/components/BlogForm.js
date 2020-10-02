@@ -22,7 +22,8 @@ const BlogEntry = ({ createBlog }) => {
     createBlog({
       title: blogTitle,
       author: blogAuthor,
-      url: blogUrl
+      url: blogUrl,
+      likes: 0
     })
 
     setBlogTitle('')
@@ -62,6 +63,7 @@ const BlogEntry = ({ createBlog }) => {
             onChange={handleUrlChange}
           />
         </div>
+        <br></br>
         <button type="submit">create</button>
       </form>
     </div >

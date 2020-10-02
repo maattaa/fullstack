@@ -77,15 +77,14 @@ const App = () => {
     setUser('')
     setUsername('')
     setPassword('')
-    setBlogs([])
   }
 
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
-
     try {
-      await blogService.create(blogObject)
+      const createdBlog = await blogService.create(blogObject)
       notifyWith(`A new blog ${blogObject.title} added`)
+      setBlogs(blogs.concat(createdBlog))
     } catch (error) {
       errorWith('Bad blog entry!')
     }
@@ -115,31 +114,37 @@ const App = () => {
   const blogFormRef = useRef()
 
   const blogForm = () => {
+
+    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
     return (
       <div>
         <h2>Blogs</h2>
         {displayNotifications()}
         <p>{user.name} logged in
-         <button onClick={() => handleLogOut()} >
+         <button onClick={() => handleLogOut} >
             logout
          </button></p>
         <br></br>
         <Togglable buttonLabel="New Blog" ref={blogFormRef}>
           <BlogEntry createBlog={addBlog} />
         </Togglable >
+        <br></br>
         {
-          blogs.map(blog =>
+          sortedBlogs.map(blog =>
             <Blog
               key={blog.id}
               blog={blog}
               blogs={blogs}
-              setBlogs={setBlogs} />
+              setBlogs={setBlogs}
+              notifyWith={notifyWith}
+              errorWith={errorWith}
+              user={user} />
           )
         }
       </div>
     )
   }
-
 
   if (user === null) {
     return (
