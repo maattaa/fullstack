@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+import blogService from '../services/blogs'
+const Blog = ({ 
+  blog, 
+  blogs, 
+  setBlogs }) => {
 
   const [infoVisible, setInfoVisible] = useState(false)
 
@@ -22,6 +26,21 @@ const Blog = ({ blog }) => {
 
   }
 
+  const increaseLikes = async (blog) => {
+    const increasedBlog = {
+      ...blog, 
+      likes: blog.likes + 1
+    }
+    const response = await blogService.update(blog.id, increasedBlog)
+    const newBlogs = blogs.map((blog) => {
+      if (blog.id === response.id) {
+        return ({...increasedBlog})
+      }
+      return blog
+    })
+    setBlogs(newBlogs)
+  }
+
   return (
     <div>
       < div style={styleHideWhenVisible} >
@@ -30,9 +49,9 @@ const Blog = ({ blog }) => {
       <div style={styleShowWhenVisible}>
 
         <p>{blog.title} <button onClick={() => setInfoVisible(false)}>hide</button>
-        <br></br>{blog.url}
-        <br></br>likes {blog.likes} <button onClick={() => console.log('click!')}>like</button>
-        <br></br>{blog.author}</p>
+          <br></br>{blog.url}
+          <br></br>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button>
+          <br></br>{blog.author}</p>
 
       </div>
     </div>

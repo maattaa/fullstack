@@ -80,16 +80,16 @@ const App = () => {
     setBlogs([])
   }
 
-  const addBlog = (blogObject) => {
+  const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
-    notifyWith(`A new blog ${blogObject.title} added`)
-  }
 
+    try {
+      await blogService.create(blogObject)
+      notifyWith(`A new blog ${blogObject.title} added`)
+    } catch (error) {
+      errorWith('Bad blog entry!')
+    }
+  }
   const displayNotifications = () => {
     return (
       <>
@@ -129,7 +129,11 @@ const App = () => {
         </Togglable >
         {
           blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              blogs={blogs}
+              setBlogs={setBlogs} />
           )
         }
       </div>
