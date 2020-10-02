@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
+
 const Blog = ({
   blog,
   blogs,
@@ -93,10 +95,19 @@ const Blog = ({
           <br></br>{blog.author}
           <br></br>
           {removeButton()}
-          </p>
+        </p>
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  notifyWith: PropTypes.func.isRequired,
+  errorWith: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 }
 
 export default Blog
