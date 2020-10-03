@@ -8,6 +8,7 @@ const Blog = ({
   setBlogs,
   notifyWith,
   errorWith,
+  increaseLikes,
   user
 }) => {
 
@@ -32,21 +33,6 @@ const Blog = ({
     ...blogStyle,
     display: infoVisible ? '' : 'none',
 
-  }
-
-  const increaseLikes = async (blog) => {
-    const increasedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-    const response = await blogService.update(blog.id, increasedBlog)
-    const newBlogs = blogs.map((blog) => {
-      if (blog.id === response.id) {
-        return ({ ...increasedBlog })
-      }
-      return blog
-    })
-    setBlogs(newBlogs)
   }
 
   const removeButton = () => {

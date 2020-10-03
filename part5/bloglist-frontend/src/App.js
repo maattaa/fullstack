@@ -100,6 +100,21 @@ const App = () => {
     )
   }
 
+  const increaseLikes = async (blog) => {
+    const increasedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    const response = await blogService.update(blog.id, increasedBlog)
+    const newBlogs = blogs.map((blog) => {
+      if (blog.id === response.id) {
+        return ({ ...increasedBlog })
+      }
+      return blog
+    })
+    setBlogs(newBlogs)
+  }
+
   const loginForm = () => {
     return (
       <LoginForm
@@ -140,6 +155,7 @@ const App = () => {
             setBlogs={setBlogs}
             notifyWith={notifyWith}
             errorWith={errorWith}
+            increaseLikes={increaseLikes}
             user={user} />
         )}
       </div>
