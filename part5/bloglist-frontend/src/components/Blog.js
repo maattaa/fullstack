@@ -54,7 +54,7 @@ const Blog = ({
     //blog.user is needed for the ones the user creates without refreshing page
     const userAsAuthor = (blog.user.id === user.id || blog.user === user.id)
     if (userAsAuthor) {
-      return(
+      return (
         <button onClick={() => deleteBlog(blog)}>remove</button>
       )
     }
@@ -83,16 +83,15 @@ const Blog = ({
   }
 
   return (
-    <div>
+    <div className='blog'>
       < div style={styleHideWhenVisible} >
-        {blog.title} <button onClick={() => setInfoVisible(true)}>view</button>
+        {blog.title} by {blog.author}<button onClick={() => setInfoVisible(true)}>view</button>
       </div>
       <div style={styleShowWhenVisible}>
-
-        <p>{blog.title} <button onClick={() => setInfoVisible(false)}>hide</button>
+        <p>{blog.title} by {blog.author}<button onClick={() => setInfoVisible(false)}>hide</button>
           <br></br>{blog.url}
           <br></br>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button>
-          <br></br>{blog.author}
+          <br></br>{user.name}
           <br></br>
           {removeButton()}
         </p>
@@ -103,10 +102,10 @@ const Blog = ({
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  notifyWith: PropTypes.func.isRequired,
-  errorWith: PropTypes.func.isRequired,
+  blogs: PropTypes.array,
+  setBlogs: PropTypes.func,
+  notifyWith: PropTypes.func,
+  errorWith: PropTypes.func,
   user: PropTypes.object.isRequired
 }
 

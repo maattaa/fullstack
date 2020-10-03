@@ -7,6 +7,7 @@ import BlogEntry from './components/BlogForm'
 import LoginForm from './components/Login'
 import Togglable from './components/Togglable'
 
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState('')
@@ -77,6 +78,7 @@ const App = () => {
     setUser('')
     setUsername('')
     setPassword('')
+    setBlogs([])
   }
 
   const addBlog = async (blogObject) => {
@@ -100,7 +102,7 @@ const App = () => {
 
   const loginForm = () => {
     return (
-      < LoginForm
+      <LoginForm
         handleLogin={handleLogin}
         handleUsernameChange={handleUsernameChange}
         handlePasswordChange={handlePasswordChange}
@@ -122,7 +124,7 @@ const App = () => {
         <h2>Blogs</h2>
         {displayNotifications()}
         <p>{user.name} logged in
-          <button onClick={() => handleLogOut} >
+          <button onClick={() => handleLogOut()} >
             logout
           </button></p>
         <br></br>
@@ -130,18 +132,16 @@ const App = () => {
           <BlogEntry createBlog={addBlog} />
         </Togglable >
         <br></br>
-        {
-          sortedBlogs.map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              blogs={blogs}
-              setBlogs={setBlogs}
-              notifyWith={notifyWith}
-              errorWith={errorWith}
-              user={user} />
-          )
-        }
+        {sortedBlogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            notifyWith={notifyWith}
+            errorWith={errorWith}
+            user={user} />
+        )}
       </div>
     )
   }
