@@ -68,24 +68,32 @@ const Blog = ({
     return null
   }
 
-  return (
-    <div className='blog'>
-      < div style={styleHideWhenVisible} >
-        {blog.title} by {blog.author}<button onClick={() => setInfoVisible(true)}>view</button>
-      </div>
-      <div style={styleShowWhenVisible}>
-        <p>{blog.title} by {blog.author}<button onClick={() => setInfoVisible(false)}>hide</button>
-          <br></br>{blog.url}
-          <br></br>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button>
-          <br></br>{user.name}
-          <br></br>
-          {removeButton()}
-        </p>
-      </div>
-    </div>
-  )
-}
+  if (blogs.length === 0) {
+    return
+  } else {
+    console.log(blogs)
+    return (
 
+      < div className='blog' >
+        < div style={styleHideWhenVisible} >
+          <div> {blog.title} <i>by</i> {blog.author}<button onClick={() => setInfoVisible(true)}>view</button></div>
+        </div>
+        <div style={styleShowWhenVisible}>
+          <div>{blog.title} <i>by</i> {blog.author}<button onClick={() => setInfoVisible(false)}>hide</button></div>
+          <div>{blog.url}</div>
+          <div>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button></div>
+          {/*Either get the blog.user.name after populating it in the backend,
+        or use the current logged in users name as these are present on newly created blogs by user.
+        Currently user is added to blogs when the blog is created with user.id,
+        and no other way to get users name without doing more backend queries.
+        This could backfire, but good for now*/}
+          <div>{blog.user.name || user.name}</div>
+          {removeButton()}
+        </div>
+      </div >
+    )
+  }
+}
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   blogs: PropTypes.array,

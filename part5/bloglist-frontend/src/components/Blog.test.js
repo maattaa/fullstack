@@ -16,7 +16,8 @@ const blog = {
   }
 }
 
-const blogs = Array(2).fill(blog)
+//Below populates two 'blog' into blogs
+//const blogs = Array(2).fill(blog)
 
 const user = {
   username: 'antti',
@@ -34,6 +35,8 @@ describe('Blogs', () => {
     const component = render(defaultComponent)
     expect(component.container).toHaveTextContent(blog.title)
     expect(component.container).toHaveTextContent(blog.author)
+
+    //This way you can check that something is not visible
     const url = component.queryByText(blog.url)
     expect(url).toBeNull()
 
@@ -57,10 +60,10 @@ describe('Blogs', () => {
     const mockHandler = jest.fn()
 
     const component = render(
-      <Blog blog={blog} user={user} blogs={blogs} increaseLikes={mockHandler} />
+      <Blog blog={blog} user={user} increaseLikes={mockHandler} />
     )
 
-    //No need to extend the blog by pressing "view" in this text
+    //No need to extend the blog by pressing "view" in this text.
     const button = component.getByText('like')
 
     fireEvent.click(button)

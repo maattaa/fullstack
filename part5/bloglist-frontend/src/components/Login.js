@@ -10,13 +10,14 @@ const LoginForm = ({
 }) => {
 
   return (
-    <div>
+    <div className='loginForm'>
       <h2>Log in to application</h2>
       {displayNotifications}
       <form onSubmit={handleLogin}>
         <div>
           username
           <input
+            id='username'
             value={username}
             name="Username"
             onChange={handleUsernameChange}
@@ -25,6 +26,7 @@ const LoginForm = ({
         <div>
           password
           <input
+            id='password'
             type="password"
             value={password}
             name="Password"
