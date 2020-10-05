@@ -31,9 +31,23 @@ Cypress.Commands.add('register', ({ user }) => {
 //Added to bypass ui if wanted
 Cypress.Commands.add('login', ({ username, password }) => {
   cy.request('POST', 'http://localhost:3001/api/login', {
-    username, password
+    'username': username,
+    'password': password
   }).then(({ body }) => {
     localStorage.setItem('loggedUser', JSON.stringify(body))
     cy.visit('http://localhost:3000')
   })
+})
+
+Cypress.Commands.add('addBlogForm', ({ title, author, url}) => {
+  cy.contains('New Blog').click()
+  cy.get('#title').type(title)
+  cy.get('#author').type(author)
+  cy.get('#url').type(url)
+  cy.get('#createButton').click()
+})
+
+//Doesnt work, need to add authorization
+Cypress.Commands.add('postApi', ({ blog }) => {
+  cy.request('POST', 'http://localhost:3001/api/blogs', blog)
 })

@@ -74,19 +74,19 @@ const Blog = ({
     return (
       < div className='blog' >
         < div style={styleHideWhenVisible} >
-          <div> {blog.title} <i>by</i> {blog.author}<button onClick={() => setInfoVisible(true)}>view</button></div>
+          {blog.title} <i>by</i> {blog.author}<button id='viewButton' onClick={() => setInfoVisible(true)}>view</button>
         </div>
         <div style={styleShowWhenVisible}>
-          <div>{blog.title} <i>by</i> {blog.author}<button onClick={() => setInfoVisible(false)}>hide</button></div>
-          <div>{blog.url}</div>
-          <div>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button></div>
+          {blog.title} <i>by</i> {blog.author}<button id='hideButton' onClick={() => setInfoVisible(false)}>hide</button>
+          <br></br>{blog.url}
+          <br></br>likes {blog.likes} <button id='likeButton' onClick={() => increaseLikes(blog)}>like</button>
           {/*Either get the blog.user.name after populating it in the backend,
           or use the current logged in users name as these are present on newly created blogs by user.
           Currently user is added to blogs when the blog is created with user.id,
           and no other way to get users name without doing more backend queries.
           This could backfire, but good for now*/}
-          <div>{blog.user.name || user.name}</div>
-          {removeButton()}
+          <br></br>{blog.user.name || user.name}
+          <br></br>{removeButton()}
         </div>
       </div >
     )
