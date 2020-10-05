@@ -41,7 +41,7 @@ const Blog = ({
     const userAsAuthor = (blog.user.id === user.id || blog.user === user.id)
     if (userAsAuthor) {
       return (
-        <button onClick={() => deleteBlog(blog)}>remove</button>
+        <button id='removeButton' onClick={() => deleteBlog(blog)}>remove</button>
       )
     }
     return
