@@ -71,9 +71,7 @@ const Blog = ({
   if (blogs.length === 0) {
     return
   } else {
-    console.log(blogs)
     return (
-
       < div className='blog' >
         < div style={styleHideWhenVisible} >
           <div> {blog.title} <i>by</i> {blog.author}<button onClick={() => setInfoVisible(true)}>view</button></div>
@@ -83,10 +81,10 @@ const Blog = ({
           <div>{blog.url}</div>
           <div>likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button></div>
           {/*Either get the blog.user.name after populating it in the backend,
-        or use the current logged in users name as these are present on newly created blogs by user.
-        Currently user is added to blogs when the blog is created with user.id,
-        and no other way to get users name without doing more backend queries.
-        This could backfire, but good for now*/}
+          or use the current logged in users name as these are present on newly created blogs by user.
+          Currently user is added to blogs when the blog is created with user.id,
+          and no other way to get users name without doing more backend queries.
+          This could backfire, but good for now*/}
           <div>{blog.user.name || user.name}</div>
           {removeButton()}
         </div>

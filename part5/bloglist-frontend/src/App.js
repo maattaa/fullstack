@@ -87,7 +87,6 @@ const App = () => {
       const createdBlog = await blogService.create(blogObject)
       notifyWith(`A new blog ${blogObject.title} added`)
       setBlogs(blogs.concat(createdBlog))
-      console.log(createdBlog)
     } catch (error) {
       errorWith('Bad blog entry!')
     }
