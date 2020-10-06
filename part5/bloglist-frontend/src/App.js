@@ -147,34 +147,32 @@ const App = () => {
           <BlogEntry createBlog={addBlog} />
         </Togglable >
         <br></br>
-        {sortedBlogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            blogs={blogs}
-            setBlogs={setBlogs}
-            notifyWith={notifyWith}
-            errorWith={errorWith}
-            increaseLikes={increaseLikes}
-            user={user} />
-        )}
+        <div className='blogs'>
+          {sortedBlogs.map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              blogs={blogs}
+              setBlogs={setBlogs}
+              notifyWith={notifyWith}
+              errorWith={errorWith}
+              increaseLikes={increaseLikes}
+              user={user} />
+          )}
+        </div>
       </div>
     )
   }
 
-  if (user === null) {
-    return (
-      <>
-        {loginForm()}
-      </>
-    )
-  } else {
-    return (
-      <>
-        {blogForm()}
-      </>
-    )
-  }
+  return (
+    <div>
+      { user === null ?
+        loginForm() :
+        blogForm()
+      }
+    </div>
+  )
+
 }
 
 export default App
