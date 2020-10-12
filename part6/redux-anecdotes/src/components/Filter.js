@@ -1,0 +1,24 @@
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { filterSet } from '../reducers/filterReducer'
+
+const Filter = (props) => {
+  const dispatch = useDispatch()
+
+  const handleChange = (event) => {
+    // input-field value is in variable event.target.value
+    event.preventDefault()
+    dispatch(filterSet(event.target.value))
+  }
+  const style = {
+    marginBottom: 10
+  }
+
+  return (
+    <div style={style}>
+      filter <input onChange={handleChange} />
+    </div>
+  )
+}
+
+export default Filter
