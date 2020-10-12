@@ -10,7 +10,6 @@ const reducer = combineReducers({
   filter: filterReducer
 })
 
-
 const store = createStore(
   reducer,
   composeWithDevTools()
