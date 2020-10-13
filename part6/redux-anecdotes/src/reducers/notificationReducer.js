@@ -1,10 +1,16 @@
 const notificationAtStart = null
 
-export const notificationSet = (notification) => {
-  console.log(notification)
-  return {
-    type: 'SET_NOTIFICATION',
-    notification
+export const notificationSet = (notification, duration) => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'CLEAR_NOTIFICATION'
+      })
+    }, duration*1000)
   }
 }
 

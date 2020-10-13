@@ -18,7 +18,20 @@ const createNew = async (anecdote) => {
   return response.data
 }
 
+const vote = async (id) => {
+  const anecdote = await axios.get(`${baseUrl}/${id}`)
+  console.log('haettu anecdote', anecdote)
+  const voteIncrease = {
+    votes: anecdote.data.votes + 1
+  }
+  console.log('vote increase', voteIncrease)
+  const response = await axios.patch(`${baseUrl}/${id}`, voteIncrease)
+  console.log('response', response)
+  return response.data
+}
+
 export default {
   getAll,
-  createNew
+  createNew,
+  vote
 }
