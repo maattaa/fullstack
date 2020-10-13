@@ -16,7 +16,7 @@ const filterReducer = (state = filterAtStart, action) => {
       return action.filter
     }
     default:
-      return filterAtStart
+      return state
   }
 }
 

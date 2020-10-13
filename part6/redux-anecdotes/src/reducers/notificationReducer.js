@@ -14,12 +14,6 @@ export const notificationSet = (notification, duration) => {
   }
 }
 
-export const notificationClear = () => {
-  return {
-    type: 'CLEAR_NOTIFICATION'
-  }
-}
-
 const notificationReducer = (state = notificationAtStart, action) => {
   console.log('notification state now: ', state)
   console.log('notification action ', action)
@@ -31,7 +25,7 @@ const notificationReducer = (state = notificationAtStart, action) => {
       return null
     }
     default:
-      return notificationAtStart
+      return state
   }
 }
 
