@@ -76,7 +76,7 @@ const Blog = ({
         < div style={styleHideWhenVisible} >
           <div id='titleHidden'>
             {blog.title} <i>by</i> {blog.author}<button id='viewButton' onClick={() => setInfoVisible(true)}>view</button>
-            </div>
+          </div>
         </div>
         <div style={styleShowWhenVisible}>
           <div id='titleVisible'>

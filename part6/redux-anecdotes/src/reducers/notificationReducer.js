@@ -1,22 +1,7 @@
 const notificationAtStart = null
-
-export const notificationSet = (notification, duration) => {
-  return async dispatch => {
-    dispatch({
-      type: 'SET_NOTIFICATION',
-      notification
-    })
-    setTimeout(() => {
-      dispatch({
-        type: 'CLEAR_NOTIFICATION'
-      })
-    }, duration*1000)
-  }
-}
+let timeoutID = null
 
 const notificationReducer = (state = notificationAtStart, action) => {
-  console.log('notification state now: ', state)
-  console.log('notification action ', action)
   switch (action.type) {
     case 'SET_NOTIFICATION': {
       return action.notification
@@ -26,6 +11,27 @@ const notificationReducer = (state = notificationAtStart, action) => {
     }
     default:
       return state
+  }
+}
+
+export const notificationSet = (notification, duration) => {
+  return async dispatch => {
+    if (timeoutID) {
+      clearTimeout(timeoutID)
+      timeoutID = null
+    }
+
+    timeoutID = setTimeout(() => {
+      dispatch({
+        type: 'CLEAR_NOTIFICATION'
+      })
+    }, duration * 1000)
+
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification,
+      timeoutID
+    })
   }
 }
 

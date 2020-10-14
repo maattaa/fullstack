@@ -10,11 +10,12 @@ const Notification = () => {
   }
 
   if (notification) {
-  return (
-    <div style={style}>
-      {notification}
-    </div>
-  ) } else {
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+  } else {
     return null
   }
 }
