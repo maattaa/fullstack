@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-//  useParams,
-  useRouteMatch,
-//  Redirect,
+  useParams,
+  //  useRouteMatch,
+  //  Redirect,
   useHistory,
   Switch, Route, Link
 } from 'react-router-dom'
+import { useField } from './hooks'
 
 const Menu = ({
   addNew,
   anecdotes,
+  // anecdote,
   notification,
   setNotification }) => {
 
@@ -18,10 +20,17 @@ const Menu = ({
     paddingRight: 5
   }
 
-  const match = useRouteMatch('/anecdotes/:id')
-  const anecdote = match
-    ? anecdotes.find(a => a.id === match.params.id)
-    : null
+  /*
+  Matching does not work when navigating from one anecdote to another, or for freshly created ones
+  This is why it is implemented without using useRouteMatch
+  */
+
+  /* 
+    const match = useRouteMatch('/anecdotes/:id')
+    const anecdote = match
+      ? anecdotes.find(a => a.id === match.params.id)
+      : null
+   */
 
   return (
     <Router>
@@ -33,7 +42,7 @@ const Menu = ({
 
       <Switch>
         <Route path="/anecdotes/:id">
-          <Anecdote anecdote={anecdote} />
+          <Anecdote anecdotes={anecdotes} />
         </Route>
         <Route path="/create">
           <CreateNew
@@ -53,7 +62,10 @@ const Menu = ({
   )
 }
 
-const Anecdote = ({ anecdote }) => {
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id
+  const anecdote = anecdotes.find(a => a.id === id)
+  console.log('Anecdoten anecdote', anecdote)
   return (
     <div>
       <h2>{anecdote.content} by {anecdote.author}</h2>
@@ -66,6 +78,7 @@ const Anecdote = ({ anecdote }) => {
 const AnecdoteList = ({ anecdotes, notification }) => (
 
   <div>
+    {console.log('AnecdoteListin anecdotes', anecdotes)}
     {notification}
     <h2>Anecdotes</h2>
     <ul>
@@ -101,42 +114,55 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push('/anecdotes')
-    props.setNotification(`a new anecdote ${content} created!`)
-    setTimeout(props.setNotification, 10*1000, '')
+    props.setNotification(`a new anecdote ${content.value} created!`)
+    setTimeout(props.setNotification, 10 * 1000, '')
+  }
+
+  const handleReset = (e) => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  const removeObject = (object) => {
+    const {reset, ...withoutReset} = {...object}
+    return withoutReset
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form >
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...removeObject(content)} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...removeObject(author)} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...removeObject(info)} />
         </div>
-        <button>create</button>
+        <button onClick={handleSubmit}>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
@@ -166,7 +192,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    console.log('AddNew anecdote ', anecdote)
   }
+
+
 
   // const anecdoteById = (id) =>
   //   anecdotes.find(a => a.id === id)
@@ -188,6 +217,7 @@ const App = () => {
       <Menu
         addNew={addNew}
         anecdotes={anecdotes}
+        //       anecdote={anecdote}
         notification={notification}
         setNotification={setNotification} />
       <Footer />
