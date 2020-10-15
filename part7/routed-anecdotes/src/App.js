@@ -22,7 +22,7 @@ const Menu = ({
 
   /*
   Matching does not work when navigating from one anecdote to another, or for freshly created ones
-  This is why it is implemented without using useRouteMatch
+  This is why it is implemented without using useRouteMatch, as excercise didn't specify method to use
   */
 
   /* 
