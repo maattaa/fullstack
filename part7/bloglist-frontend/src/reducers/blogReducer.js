@@ -29,7 +29,6 @@ export const createBlog = (blog) => {
   }
 }
 
-
 export const initializeBlogs = () => {
   return async dispatch => {
     const blogs = await blogService.getAll()
@@ -56,7 +55,6 @@ export const likeBlog = blog => {
 
 export const deleteBlog = blog => {
   return async dispatch => {
-    console.log('deleteBlogin blog ', blog)
     await blogService.del(blog.id)
     dispatch({
       type: 'DELETE_BLOG',

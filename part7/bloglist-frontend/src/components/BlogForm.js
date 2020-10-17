@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
+import { notificationSet, errorSet } from '../reducers/notificationReducer'
 
 const BlogEntry = () => {
 
@@ -31,12 +32,15 @@ const BlogEntry = () => {
       url: blogUrl,
       likes: 0
     }
-
-    dispatch(createBlog(blogToBeCreated))
-
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('')
+    try {
+      dispatch(createBlog(blogToBeCreated))
+      dispatch(notificationSet(`A new blog ${blogToBeCreated.title} added`, 5))
+      setBlogTitle('')
+      setBlogAuthor('')
+      setBlogUrl('')
+    } catch (error) {
+      dispatch(errorSet('Bad blog entry!', 5))
+    }
   }
 
   return (

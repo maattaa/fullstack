@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { notificationSet, errorSet } from '../reducers/notificationReducer'
 
-const Blog = ({
-  blog,
-  blogs,
-  setBlogs,
-  notifyWith,
-  errorWith,
-  increaseLikes,
-  user
-}) => {
+const Blog = ({blog,}) => {
+
   const dispatch = useDispatch()
-
   const [infoVisible, setInfoVisible] = useState(false)
+  const user = useSelector(state => state.user)
 
   //Used for all blogs
   const blogStyle = {
@@ -52,22 +45,12 @@ const Blog = ({
 
   const del = async (blogObject) => {
     const ok = window.confirm(`Remove ${blogObject.title} by ${blogObject.author}`)
-    console.log(ok)
     if (ok) {
       try {
-         dispatch(deleteBlog(blogObject))
-        // await blogService.del(blogObject.id)
-/*         const newBlogs = blogs.filter((blog) => {
-          if (blog.id !== blogObject.id) {
-            return blog
-          } else {
-            return null
-          }
-        }) */
-/*    KORJAA     setBlogs(newBlogs) */
-        notifyWith(`Deleted ${blogObject.title}`)
+        dispatch(deleteBlog(blogObject))
+        dispatch(notificationSet(`Deleted ${blogObject.title}`, 5))
       } catch {
-        errorWith(`Unable to delete ${blogObject.title}`)
+        dispatch(errorSet(`Unable to delete ${blogObject.title}`, 5))
       }
     }
     return null
@@ -103,13 +86,13 @@ const Blog = ({
     )
   }
 }
+
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   blogs: PropTypes.array,
   setBlogs: PropTypes.func,
   notifyWith: PropTypes.func,
   errorWith: PropTypes.func,
-  user: PropTypes.object.isRequired
 }
 
 export default Blog
