@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({
   blog,
@@ -44,17 +44,19 @@ const Blog = ({
     const userAsAuthor = (blog.user.id === user.id || blog.user === user.id)
     if (userAsAuthor) {
       return (
-        <button id='removeButton' onClick={() => deleteBlog(blog)}>remove</button>
+        <button id='removeButton' onClick={() => del(blog)}>remove</button>
       )
     }
     return
   }
 
-  const deleteBlog = async (blogObject) => {
+  const del = async (blogObject) => {
     const ok = window.confirm(`Remove ${blogObject.title} by ${blogObject.author}`)
+    console.log(ok)
     if (ok) {
       try {
-        await blogService.del(blogObject.id)
+         dispatch(deleteBlog(blogObject))
+        // await blogService.del(blogObject.id)
 /*         const newBlogs = blogs.filter((blog) => {
           if (blog.id !== blogObject.id) {
             return blog
@@ -71,7 +73,7 @@ const Blog = ({
     return null
   }
 
-  if (blogs.length === 0) {
+  if (!blog) {
     return
   } else {
     return (
