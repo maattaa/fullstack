@@ -5,8 +5,8 @@ import {
   Switch, Route, Link
 } from 'react-router-dom'
 import { initializeBlogs } from './reducers/blogReducer'
-import { logout, lookForCookies } from './reducers/userReducer' 
-import { initializeUsers} from './reducers/usersReducer'
+import { logout, lookForCookies } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import { Notification, ErrorMessage } from './components/Notification'
@@ -17,7 +17,7 @@ import LoginForm from './components/Login'
 const App = () => {
 
   const user = useSelector(state => state.user)
-  const state =  useSelector(state => state)
+  const state = useSelector(state => state)
   const dispatch = useDispatch()
 
   //Get all blogs
@@ -40,14 +40,14 @@ const App = () => {
   //Get user we want info for
   const matchUser = useRouteMatch('/users/:id')
   const userInfo = matchUser
-  ? state.users.find(u => u.id === matchUser.params.id)
-  : null
+    ? state.users.find(u => u.id === matchUser.params.id)
+    : null
 
   //Get blog we want info for
   const matchBlog = useRouteMatch('/blogs/:id')
   const blogInfo = matchBlog
-  ? state.blogs.find(b => b.id === matchBlog.params.id)
-  : null
+    ? state.blogs.find(b => b.id === matchBlog.params.id)
+    : null
 
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedUser')
@@ -75,37 +75,41 @@ const App = () => {
     padding: 5
   }
 
+  const navigationStlye = {
+    backgroundColor: 'lightgrey'
+  }
+
   if (user === null) {
     return loginForm()
   }
 
   return (
     <div>
-
-        <div style={padding}>
+      <div style={navigationStlye}>
         <p>
           <Link style={padding} to="/">Blogs</Link>
           <Link style={padding} to="/users">Users</Link>
-          {user.name} logged in
+          <span style={padding}>{user.name} logged in</span>
           <button id='logoutButton' onClick={() => handleLogOut()} >
             logout
-          </button></p>
-        </div>
-        {displayNotifications()}
-        <Switch>
+          </button>
+        </p>
+      </div>
+      {displayNotifications()}
+      <Switch>
         <Route path="/users/:id">
-            <User user={userInfo} />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/blogs/:id">
-            <Blog blog={blogInfo}/>
-          </Route>
-          <Route path="/">
-            <Blogs />
-          </Route>
-        </Switch>
+          <User user={userInfo} />
+        </Route>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog blog={blogInfo} />
+        </Route>
+        <Route path="/">
+          <Blogs />
+        </Route>
+      </Switch>
 
     </div>
   )
