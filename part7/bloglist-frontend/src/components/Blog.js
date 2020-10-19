@@ -39,7 +39,6 @@ const Blog = ({ blog }) => {
     return null
   }
 
-
   return (
     < div className='blog' >
       <div>
@@ -57,11 +56,16 @@ const Blog = ({ blog }) => {
         <div id='remove'>
           {removeButton()}
         </div>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments.map(comment => 
+            <li key={comment.id}>{comment.comment}</li>
+          )}
+        </ul>
       </div>
     </div >
   )
 }
-
 
 Blog.propTypes = {
   blog: PropTypes.object,

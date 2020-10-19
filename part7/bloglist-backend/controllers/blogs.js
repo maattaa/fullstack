@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
@@ -8,6 +9,9 @@ blogsRouter.get('/', async (request, response) => {
     .populate('user', {
       username: 1,
       name: 1
+    })
+    .populate('comments', {
+      comment: 1
     })
   response.json(blogs)
 })
@@ -58,6 +62,24 @@ blogsRouter.post('/', async (request, response) => {
   }
 })
 
+blogsRouter.patch('/:id/comments', async (request, response) => {
+
+  const body = request.body
+  const blog = await Blog.findById(request.params.id)
+  const comment = new Comment({
+    comment: body.comment,
+    blog: blog._id
+  })
+
+  console.log('blog',blog)
+  const savedComment = await comment.save()
+  blog.comments = blog.comments.concat(savedComment._id)
+  await blog.save()
+
+  response.status(200)
+    .json(savedComment)
+})
+
 blogsRouter.put('/:id', async (request, response) => {
   const body = request.body
 
@@ -68,5 +90,7 @@ blogsRouter.put('/:id', async (request, response) => {
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.status(200).json(updatedBlog)
 })
+
+
 
 module.exports = blogsRouter
