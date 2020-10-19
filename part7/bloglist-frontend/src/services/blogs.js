@@ -21,9 +21,9 @@ const create = async newObject => {
   return response.data
 }
 
-const update = (newObject) => {
-  const request = axios.put(`${baseUrl}/${newObject.id}`, newObject)
-  return request.then(response => response.data)
+const update = async (newObject) => {
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject)
+  return response.data
 }
 
 const del = async (id) => {

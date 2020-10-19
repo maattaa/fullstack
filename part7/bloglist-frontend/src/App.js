@@ -1,21 +1,25 @@
 import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  useRouteMatch,
+  Switch, Route, Link
+} from 'react-router-dom'
+import { notificationSet, errorSet } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { logout, lookForCookies } from './reducers/userReducer' 
+import { initializeUsers} from './reducers/usersReducer'
 import Blogs from './components/Blogs'
 import { Notification, ErrorMessage } from './components/Notification'
+import Users from './components/Users'
+import User from './components/User'
 import BlogEntry from './components/BlogForm'
 import LoginForm from './components/Login'
 import Togglable from './components/Togglable'
 
-import { notificationSet, errorSet } from './reducers/notificationReducer'
-import { createBlog } from './reducers/blogReducer'
-import { initializeBlogs } from './reducers/blogReducer'
-import { logout } from './reducers/userReducer'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { lookForCookies } from './reducers/userReducer'
-
 const App = () => {
 
   const user = useSelector(state => state.user)
+  const state =  useSelector(state => state)
   const dispatch = useDispatch()
 
   //Get all blogs
@@ -28,12 +32,25 @@ const App = () => {
     dispatch(lookForCookies())
   }, [dispatch])
 
+
+  //Get users, could be moved to Users-component
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [dispatch])
+
+
+  //Get user we want info for
+  const match = useRouteMatch('/users/:id')
+  const userInfo = match 
+  ? state.users.find(u => u.id === match.params.id)
+  : null
+
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedUser')
     dispatch(logout())
   }
 
-  const addBlog = async (blogObject) => {
+/*   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     try {
       dispatch(notificationSet(`A new blog ${blogObject.title} added`, 5))
@@ -41,7 +58,7 @@ const App = () => {
     } catch (error) {
       dispatch(errorSet('Bad blog entry!', 5))
     }
-  }
+  } */
   const displayNotifications = () => {
     return (
       <>
@@ -59,7 +76,7 @@ const App = () => {
     )
   }
 
-  const blogFormRef = useRef()
+/*   const blogFormRef = useRef()
 
   const blogForm = () => {
     return (
@@ -80,14 +97,41 @@ const App = () => {
         />
       </div>
     )
+  } */
+
+  const padding = {
+    padding: 5
+  }
+
+  if (user === null) {
+    return loginForm()
   }
 
   return (
     <div>
-      { user === null ?
-        loginForm() :
-        blogForm()
-      }
+
+        <div style={padding}>
+        <p>
+          <Link style={padding} to="/">home</Link>
+          <Link style={padding} to="/users">Users</Link>
+          {user.name} logged in
+          <button id='logoutButton' onClick={() => handleLogOut()} >
+            logout
+          </button></p>
+        </div>
+        {displayNotifications()}
+        <Switch>
+        <Route path="/users/:id">
+            <User user={userInfo} />
+          </Route>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/">
+            <Blogs />
+          </Route>
+        </Switch>
+
     </div>
   )
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 import { notificationSet, errorSet } from '../reducers/notificationReducer'
 
-const Blog = ({blog,}) => {
+const Blog = ({blog}) => {
 
   const dispatch = useDispatch()
   const [infoVisible, setInfoVisible] = useState(false)
