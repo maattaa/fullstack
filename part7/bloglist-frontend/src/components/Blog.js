@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog, addComment } from '../reducers/blogReducer'
 import { notificationSet, errorSet } from '../reducers/notificationReducer'
+
+import { useHistory } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
+  const history = useHistory()
+  const [comment, setComment] = useState('')
 
   //Wait till blog is loaded
   if (!blog) {
     return null
   }
+
+  const handleCommentChange = (event) => setComment(event.target.value)
 
   const removeButton = () => {
     //blog.user.id is on initially fetched blogs as these have user populated
@@ -32,11 +38,48 @@ const Blog = ({ blog }) => {
       try {
         dispatch(deleteBlog(blogObject))
         dispatch(notificationSet(`Deleted ${blogObject.title}`, 5))
+        history.push('/')
       } catch {
         dispatch(errorSet(`Unable to delete ${blogObject.title}`, 5))
       }
     }
     return null
+  }
+
+  const addCommentSubmit = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      id: blog.id,
+      comments: {
+        comment: comment
+      }
+    }
+
+    try {
+      dispatch(addComment(blogObject))
+      dispatch(notificationSet(`A new comment added`, 5))
+      setComment('')
+    } catch (error) {
+      dispatch(errorSet(`Got error ${error}`))
+    }
+
+  }
+
+  const commentForm = () => {
+    return (
+      <div>
+        <form onSubmit={addCommentSubmit}>
+          <input
+            id='comment'
+            type='text'
+            value={comment}
+            name='Comment'
+            onChange={handleCommentChange}>
+          </input>
+          <button type='submit' id='addComment'>Create comment</button>
+        </form>
+      </div>
+    )
   }
 
   return (
@@ -57,9 +100,10 @@ const Blog = ({ blog }) => {
           {removeButton()}
         </div>
         <h3>Comments</h3>
+        {commentForm()}
         <ul>
-          {blog.comments.map(comment => 
-            <li key={comment.id}>{comment.comment}</li>
+          {blog.comments.map(c =>
+            <li key={c.id}>{c.comment}</li>
           )}
         </ul>
       </div>

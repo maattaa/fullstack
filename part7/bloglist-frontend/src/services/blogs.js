@@ -35,4 +35,11 @@ const del = async (id) => {
   return response
 }
 
-export default { getAll, setToken, create, update, del }
+const addComment = async (newObject) => {
+  const comment = {
+    comment: newObject.comments.comment
+  }
+  const response = await axios.patch(`${baseUrl}/${newObject.id}/comments`, comment)
+  return response
+}
+export default { getAll, setToken, create, update, del, addComment }

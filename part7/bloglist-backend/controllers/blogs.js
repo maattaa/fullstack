@@ -63,15 +63,14 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.patch('/:id/comments', async (request, response) => {
-
   const body = request.body
   const blog = await Blog.findById(request.params.id)
+
   const comment = new Comment({
     comment: body.comment,
     blog: blog._id
   })
 
-  console.log('blog',blog)
   const savedComment = await comment.save()
   blog.comments = blog.comments.concat(savedComment._id)
   await blog.save()
