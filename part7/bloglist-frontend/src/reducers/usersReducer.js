@@ -6,8 +6,6 @@ const userReducer = (state = usersAtStart, action) => {
   switch (action.type) {
     case 'INIT_USERS':
       return action.data
-    case 'GET_USER':
-      return state.find(u => u.id === action.id)
     default:
       return state
   }
@@ -23,12 +21,5 @@ export const initializeUsers = () => {
   }
 }
 
-/* export const getUser = (id) => {
-  const user = dispatch({
-    type: 'GET_USER',
-    id: id
-  })
-  return user
-} */
 
 export default userReducer
