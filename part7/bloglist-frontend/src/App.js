@@ -14,6 +14,8 @@ import Users from './components/Users'
 import User from './components/User'
 import LoginForm from './components/Login'
 
+import { Nav, Navbar, Button } from 'react-bootstrap'
+
 const App = () => {
 
   const user = useSelector(state => state.user)
@@ -75,26 +77,35 @@ const App = () => {
     padding: 5
   }
 
-  const navigationStlye = {
-    backgroundColor: 'lightgrey'
-  }
-
   if (user === null) {
     return loginForm()
   }
 
   return (
     <div>
-      <div style={navigationStlye}>
-        <p>
-          <Link style={padding} to="/">Blogs</Link>
-          <Link style={padding} to="/users">Users</Link>
-          <span style={padding}>{user.name} logged in</span>
-          <button id='logoutButton' onClick={() => handleLogOut()} >
-            logout
-          </button>
-        </p>
-      </div>
+
+      <Navbar sticky="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav classname="mr-auto">
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/">Blogs</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/users">Users</Link>
+            </Nav.Link>
+            </Nav>
+            <Nav className="ml-auto">
+            <Nav.Link href="#" as="span">
+              <em style={padding}>{user.name} logged in</em>
+            </Nav.Link>
+            <Button onClick={() => handleLogOut()}>Log out</Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+
+
       {displayNotifications()}
       <Switch>
         <Route path="/users/:id">

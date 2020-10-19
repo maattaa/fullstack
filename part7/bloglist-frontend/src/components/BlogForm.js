@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { notificationSet, errorSet } from '../reducers/notificationReducer'
+import { Form, Button, InputGroup } from 'react-bootstrap'
 
 const BlogEntry = () => {
 
@@ -40,14 +41,14 @@ const BlogEntry = () => {
     if (!visibility) {
       return (
         <div>
-          <button onClick={() => setVisibility(!visibility)}>New Blog</button>
+          <Button variant="primary" onClick={() => setVisibility(!visibility)}>New Blog</Button>
         </div>
       )
     } else {
       return (
         <div>
           {blogForm()}
-          <button onClick={() => setVisibility(!visibility)}>Cancel</button>
+          <Button onClick={() => setVisibility(!visibility)}>Cancel</Button>
         </div>
       )
     }
@@ -56,41 +57,73 @@ const BlogEntry = () => {
   const blogForm = () => {
     return (
       <div className='blogFormDiv'>
-        <h2>Create a new blog</h2>
-        <form onSubmit={addBlog} id='blogEntryForm'>
-          <div>
-            title:
-          <input
-              id='title'
-              type='text'
-              value={blogTitle}
-              name='Title'
-              onChange={handleTitleChange}
+        <h3>Create a new blog</h3>
+        <Form onSubmit={addBlog} id='blogEntryForm'>
+          <Form.Group>
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
             />
-          </div>
-          <div>
-            author:
-          <input
-              id='author'
-              type='text'
-              value={blogAuthor}
-              name='Author'
-              onChange={handleAuthorChange}
+            <Form.Label>Author</Form.Label>
+            <Form.Control
+              type="text"
+              name="author"
             />
-          </div>
-          <div>
-            url:
-          <input
-              id='url'
-              type='text'
-              value={blogUrl}
-              name='Url'
-              onChange={handleUrlChange}
+            <Form.Label>Url</Form.Label>
+            <InputGroup className="mb-2 mr-sm-2">
+              <InputGroup.Prepend>
+                <InputGroup.Text>
+                  www</InputGroup.Text>
+              </InputGroup.Prepend>
+            
+            <Form.Control
+              type="text"
+              name="URL"
             />
-          </div>
-          <br></br>
-          <button type='submit' id='createButton'>Create</button>
-        </form>
+            </InputGroup>
+            <br></br>
+            <Button variant="primary" type="submit">
+              Create
+            </Button>
+          </Form.Group>
+        </Form>
+        {/*         <div>
+          title:
+          <input
+            id='title'
+            type='text'
+            value={blogTitle}
+            name='Title'
+            onChange={handleTitleChange}
+          />
+        </div>
+
+
+
+        <div>
+          author:
+          <input
+            id='author'
+            type='text'
+            value={blogAuthor}
+            name='Author'
+            onChange={handleAuthorChange}
+          />
+        </div>
+        <div>
+          url:
+          <input
+            id='url'
+            type='text'
+            value={blogUrl}
+            name='Url'
+            onChange={handleUrlChange}
+          />
+        </div>
+        <br></br>
+        <button type='submit' id='createButton'>Create</button>
+ */}
       </div >
     )
   }

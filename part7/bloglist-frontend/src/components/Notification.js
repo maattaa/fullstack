@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import {Alert} from 'react-bootstrap'
 
 const errorStyle = ({
   color: 'red',
@@ -33,9 +34,9 @@ const Notification = () => {
   }
 
   return (
-    <div className="notification" style={notificationStyle}>
+    <Alert variant="success">
       {message}
-    </div>
+    </Alert>
   )
 }
 
@@ -46,9 +47,9 @@ const ErrorMessage = () => {
   }
 
   return (
-    <div className="error" style={errorStyle}>
+    <Alert variant="danger">
       {message}
-    </div>
+    </Alert>
   )
 }
 
