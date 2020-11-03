@@ -7,12 +7,14 @@ const BirthYear = (authors) => {
   const [author, setAuthor] = useState('')
   const [birthYear, setBirthYear] = useState('')
 
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+  const [editAuthor] = useMutation(EDIT_AUTHOR
+    , {
     refetchQueries: [
       { query: ALL_AUTHORS },
       { query: ALL_BOOKS }
     ]
-  })
+  }
+  )
 
   const options = authors.authors.map(a => ({
     value: a.name,
@@ -20,14 +22,9 @@ const BirthYear = (authors) => {
   })
   )
 
-  const testi = {
-    value: 'moi',
-    label: 'toimiiko'
-  }
-
   const submit = async (event) => {
     event.preventDefault()
-
+    console.log('lähetetään frontista editAuthor')
     editAuthor({
       variables: {
         name: author.value,
