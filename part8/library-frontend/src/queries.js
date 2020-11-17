@@ -8,6 +8,7 @@ query {
     author {
       name
     }
+    genres
   }
 }
 `
@@ -47,6 +48,17 @@ mutation editAuthor($name: String!, $setBornTo: Int!) {
   ) {
     name,
     born
+  }
+}
+`
+
+export const LOGIN = gql`
+mutation login($username: String!, $password: String!) {
+  login(
+    username: $username, 
+    password: $password
+    ) {
+    value
   }
 }
 `
