@@ -23,7 +23,6 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    console.log('ennen createbookkia')
     await createBook({
       variables: {
         title,
@@ -32,7 +31,6 @@ const NewBook = (props) => {
         genres
       }
     })
-    console.log('createbookin')
     setTitle('')
     setPublished('')
     setAuhtor('')

@@ -17,9 +17,9 @@ const Login = ({ setToken, setPage, show }) => {
       const token = result.data.login.value
       setToken(token)
       localStorage.setItem('user-token', token)
-      setPage('authors')
+      setPage('authors') 
     }
-  }, [result.data])
+  }, [result.data]) // eslint-disable-line
 
   if (!show) {
     return null
