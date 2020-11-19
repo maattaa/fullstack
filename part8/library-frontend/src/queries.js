@@ -1,5 +1,16 @@
 import { gql } from '@apollo/client'
 
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    published
+    author {
+      name
+    }
+    genres
+  }
+`
+
 export const ALL_BOOKS = gql`
 query {
   allBooks {
@@ -75,10 +86,8 @@ mutation login($username: String!, $password: String!) {
 export const BOOK_ADDED = gql`
   subscription {
     bookAdded {
-      title
-      author {name}
-      published
-      genres
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `
