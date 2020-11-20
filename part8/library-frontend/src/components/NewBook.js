@@ -19,7 +19,6 @@ const NewBook = ({show, updateCacheWith}) => {
     }
   }
   )
-  console.log(typeof(updateCacheWith))
   if (!show) {
     return null
   }
