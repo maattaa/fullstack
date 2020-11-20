@@ -1,5 +1,7 @@
+const DataLoader = require('dataloader')
 const { ApolloServer, UserInputError, gql, AuthenticationError, PubSub } = require('apollo-server')
 const mongoose = require('mongoose')
+mongoose.set('debug', true)
 
 const Author = require('./models/author')
 const Book = require('./models/book')
@@ -22,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 })
 
 const jwt = require('jsonwebtoken')
+const book = require('./models/book')
 
 const JWT_SECRET = 'todo_when_have_time'
 
@@ -116,9 +119,9 @@ const resolvers = {
     name: (root) => root.name,
     born: (root) => root.born,
     id: (root) => root.id,
-    bookCount: async (root) => {
-      const books = await Book.collection.countDocuments({ author: root._id })
-      return books
+    bookCount: async (root, args, context) => {
+      const results = await context.bookLoader.load(root._id)
+      return results
     }
   },
 
@@ -208,17 +211,28 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
+    let currentUser = null
     if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(
         auth.substring(7), JWT_SECRET
       )
-      const currentUser = await (await User.findById(decodedToken.id))
-      return { currentUser }
+      currentUser = await (await User.findById(decodedToken.id))
+    }
+    return {
+      currentUser: currentUser,
+      bookLoader: new DataLoader(async keys => {
+        const books = await Book.find({ author: { $in: keys } }).select('author')
+        const authorsMap = {}
+        keys.forEach(author => {
+          authorsMap[author] = books.filter(b => JSON.stringify(b.author) === JSON.stringify(author)).length
+        })
+        return keys.map(key => authorsMap[key])
+      })
     }
   }
 })
 
 server.listen().then(({ url, subscriptionsUrl }) => {
-  console.log(`Server ready at ${url}`)
+  console.log(`🚀 Server ready at ${url}`)
   console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
