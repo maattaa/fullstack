@@ -1,4 +1,3 @@
-
 const calculateBmi = (height: number, weight: number): string => {
   const heightm = height / 100;
   const bmi = (weight / (heightm ^ 2));
@@ -23,6 +22,5 @@ const calculateBmi = (height: number, weight: number): string => {
       return `Something bad happened with args ${height} and ${weight}`;
   }
 }
-
 
 console.log(calculateBmi(180, 70));
