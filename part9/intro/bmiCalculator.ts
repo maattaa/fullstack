@@ -19,7 +19,7 @@ const parseArguments = (args: Array<String>): Elements => {
 
 const calculateBmi = (height: number, weight: number): string => {
 
-  const bmi = (weight / Math.pow((height/100), 2));
+  const bmi = (weight / Math.pow((height / 100), 2));
 
   switch (true) {
     case (bmi <= 15):
@@ -41,6 +41,22 @@ const calculateBmi = (height: number, weight: number): string => {
     default:
       return `Something bad happened with args ${height} and ${weight}`;
   }
+}
+
+export const bmiEndpoint = (height: number, weight: number): object => {
+  if (isNaN(Number(height)) || isNaN(Number(weight))) {
+    return {
+      error: 'malformatted parameters'
+    }
+  } else {
+    const bmi = calculateBmi(height, weight);
+    return {
+      weight,
+      height,
+      bmi
+    }
+  }
+
 }
 
 try {
