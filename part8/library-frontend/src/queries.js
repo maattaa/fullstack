@@ -12,8 +12,8 @@ const BOOK_DETAILS = gql`
 `
 
 export const ALL_BOOKS = gql`
-query {
-  allBooks {
+query AllBooks($genre: String) {
+  allBooks(genre: $genre) {
     title
     published
     author {

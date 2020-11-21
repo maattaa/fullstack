@@ -96,6 +96,7 @@ const App = () => {
 
       <RecommendedBooks
         show={page === 'recommended'}
+        token={token}
       />
 
     </div>
