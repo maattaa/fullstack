@@ -1,6 +1,26 @@
+interface Elements {
+  height: number;
+  weight: number
+}
+
+const parseArguments = (args: Array<String>): Elements => {
+  if (args.length < 4) throw new Error('Give height and weight')
+  if (args.length > 4) throw new Error('Only give height and weight')
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      height: Number(args[2]),
+      weight: Number(args[3])
+    }
+  } else {
+    throw new Error('Give numbers only!')
+  }
+}
+
 const calculateBmi = (height: number, weight: number): string => {
-  const heightm = height / 100;
-  const bmi = (weight / (heightm ^ 2));
+
+  const bmi = (weight / Math.pow((height/100), 2));
+
   switch (true) {
     case (bmi <= 15):
       return 'Very severely underweight';
@@ -23,4 +43,9 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 }
 
-console.log(calculateBmi(180, 70));
+try {
+  const { height, weight } = parseArguments(process.argv)
+  console.log(calculateBmi(height, weight))
+} catch (e) {
+  console.log(`Error: ${e.message}`)
+}

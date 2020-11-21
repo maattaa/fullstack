@@ -8,10 +8,22 @@ interface Result {
   average: number;
 }
 
+const checkArguments = (args: Array<string>): Array<number> => {
+  args.forEach(a => {
+    if (isNaN(Number(a))) {
+      console.log(`Give only numbers - ${a}`);
+      return [];
+    }
+  })
+  return args.map(a => Number(a));
+}
+
 const calculateExercise = (args: Array<number>): Result => {
-  const target: Array<number> = [2, 0.5, 2.5, 0, 0, 3, 0]
-  const targetTotal: number = target.reduce((a, b) => a + b, 0)
-  const doneTotal: number = args.reduce((a, b) => a + b, 0)
+  console.log('eka', Number(args[2]))
+  const target: number = args[2]
+
+  const done = args.splice(3)
+  const doneTotal: number = done.reduce((a, b) => a + b, 0)
 
   const dayReducer = (total: number, value: number) => {
     if (value > 0) {
@@ -20,32 +32,34 @@ const calculateExercise = (args: Array<number>): Result => {
     return total;
   }
 
-  const rating = (done: number): number => {
+  const rating = (done: Array<number>): number => {
+    const score = done.reduce(dayReducer, 0) / done.length
     switch (true) {
-      case (done < 5):
+      case (score < 1):
         return 1;
-      case (done <= 10):
+      case (score <= 2.5):
         return 3;
       default:
         return 2;
     }
   }
 
-  const feedback = (done: number): string => {
+  const feedback = (done: Array<number>): string => {
+    const score = done.reduce(dayReducer, 0) / done.length
     switch (true) {
-      case (done < 2):
+      case (score < 0.2):
         return 'Do something';
-      case (done <= 3):
+      case (score <= 0.5):
         return 'Barely a start!';
-      case (done <= 5):
+      case (score <= 0.8):
         return 'Thats a start!';
-      case (done <= 7):
+      case (score <= 1):
         return 'Try harder';
-      case (done <= 9):
+      case (score <= 1.4):
         return 'Well done';
-      case (done <= 12):
+      case (score <= 2):
         return 'Feeling good!';
-      case (done > 12):
+      case (score > 3):
         return 'Superb'
       default:
         return 'Keep mooving!'
@@ -53,14 +67,14 @@ const calculateExercise = (args: Array<number>): Result => {
   }
 
   return {
-    periodLength: args.length,
-    trainingDays: args.reduce(dayReducer, 0),
-    success: (doneTotal > targetTotal),
-    rating: rating(doneTotal),
-    ratingDescription: feedback(doneTotal),
-    target: targetTotal,
-    average: doneTotal / args.length
+    periodLength: done.length,
+    trainingDays: done.reduce(dayReducer, 0),
+    success: ((doneTotal / done.length) > target),
+    rating: rating(done),
+    ratingDescription: feedback(done),
+    target,
+    average: doneTotal / done.length
   }
 }
 
-console.log(calculateExercise([2, 1, 0, 5, 1, 0, 0]))
+console.log(calculateExercise(checkArguments(process.argv)))
