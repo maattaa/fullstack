@@ -21,11 +21,20 @@ const App = () => {
 
 
   const updateCacheWith = (addedBook) => {
+
+    const includedIn = (set, object) =>
+      //Added book doesn't have id yet, lets compare with title
+      //as its unique by schema
+      set.map(p => p.title).includes(object.title)
+
     const dataInStore = client.readQuery({ query: ALL_BOOKS })
+
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
       client.writeQuery({
         query: ALL_BOOKS,
         data: { allBooks: dataInStore.allBooks.concat(addedBook) }
       })
+    }
   }
 
   useSubscription(BOOK_ADDED, {

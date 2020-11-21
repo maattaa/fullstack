@@ -1,7 +1,6 @@
 const DataLoader = require('dataloader')
 const { ApolloServer, UserInputError, gql, AuthenticationError, PubSub } = require('apollo-server')
 const mongoose = require('mongoose')
-mongoose.set('debug', true)
 
 const Author = require('./models/author')
 const Book = require('./models/book')

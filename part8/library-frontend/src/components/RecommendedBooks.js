@@ -45,19 +45,28 @@ const RecommendedBooks = (props) => {
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      if (favGenre && Object.values(addedBook.genres)
-        .includes(favGenre)) {
-        const dataInStore = client.readQuery({
-          query: ALL_BOOKS, variables: { genre: favGenre }
-        })
-        client.writeQuery({
-          query: ALL_BOOKS,
-          variables: { genre: favGenre },
-          data: {
-            ...dataInStore,
-            allBooks: [...dataInStore.allBooks, addedBook]
-          }
-        })
+
+      const includedIn = (set, object) =>
+        //Added book doesn't have id yet, lets compare with title
+        //as its unique by schema
+        set.map(p => p.title).includes(object.title)
+
+      const dataInStore = client.readQuery({
+        query: ALL_BOOKS, variables: { genre: favGenre }
+      })
+      if (!includedIn(dataInStore.allBooks, addedBook)) {
+        if (favGenre && Object.values(addedBook.genres)
+          .includes(favGenre)) {
+
+          client.writeQuery({
+            query: ALL_BOOKS,
+            variables: { genre: favGenre },
+            data: {
+              ...dataInStore,
+              allBooks: [...dataInStore.allBooks, addedBook]
+            }
+          })
+        }
       }
     }
   })
