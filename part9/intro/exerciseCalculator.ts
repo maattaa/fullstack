@@ -8,32 +8,28 @@ interface Result {
   average: number;
 }
 
-const checkArguments = (args: Array<string>): Array<number> => {
+/* const checkArguments = (args: Array<string>): Array<number> => {
   args.forEach(a => {
     if (isNaN(Number(a))) {
       console.log(`Give only numbers - ${a}`);
-      return [];
     }
-  })
+  });
   return args.map(a => Number(a));
-}
+}; */
 
-const calculateExercise = (args: Array<number>): Result => {
-  console.log('eka', Number(args[2]))
-  const target: number = args[2]
+const calculateExercise = (target: number, exercises: Array<number>): Result => {
 
-  const done = args.splice(3)
-  const doneTotal: number = done.reduce((a, b) => a + b, 0)
+  const doneTotal: number = exercises.reduce((a, b) => a + b, 0);
 
   const dayReducer = (total: number, value: number) => {
     if (value > 0) {
       return total += 1;
     }
     return total;
-  }
+  };
 
   const rating = (done: Array<number>): number => {
-    const score = done.reduce(dayReducer, 0) / done.length
+    const score = done.reduce(dayReducer, 0) / done.length;
     switch (true) {
       case (score < 1):
         return 1;
@@ -42,10 +38,10 @@ const calculateExercise = (args: Array<number>): Result => {
       default:
         return 2;
     }
-  }
+  };
 
   const feedback = (done: Array<number>): string => {
-    const score = done.reduce(dayReducer, 0) / done.length
+    const score = done.reduce(dayReducer, 0) / done.length;
     switch (true) {
       case (score < 0.2):
         return 'Do something';
@@ -60,21 +56,30 @@ const calculateExercise = (args: Array<number>): Result => {
       case (score <= 2):
         return 'Feeling good!';
       case (score > 3):
-        return 'Superb'
+        return 'Superb';
       default:
-        return 'Keep mooving!'
+        return 'Keep mooving!';
     }
-  }
+  };
 
   return {
-    periodLength: done.length,
-    trainingDays: done.reduce(dayReducer, 0),
-    success: ((doneTotal / done.length) > target),
-    rating: rating(done),
-    ratingDescription: feedback(done),
+    periodLength: exercises.length,
+    trainingDays: exercises.reduce(dayReducer, 0),
+    success: ((doneTotal / exercises.length) > target),
+    rating: rating(exercises),
+    ratingDescription: feedback(exercises),
     target,
-    average: doneTotal / done.length
-  }
-}
+    average: doneTotal / exercises.length
+  };
+};
 
-console.log(calculateExercise(checkArguments(process.argv)))
+export const exerciseEndpoint = (exercises: Array<number>, target: number): string => {
+  //Validating for numbers has been done in index.ts
+//  const numbers = checkArguments(exercises);
+  const exerciseData = calculateExercise(target, exercises);
+  return JSON.stringify(exerciseData);
+
+};
+
+
+//console.log(calculateExercise(checkArguments(process.argv)));

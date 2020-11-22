@@ -3,19 +3,19 @@ interface Elements {
   weight: number
 }
 
-const parseArguments = (args: Array<String>): Elements => {
-  if (args.length < 4) throw new Error('Give height and weight')
-  if (args.length > 4) throw new Error('Only give height and weight')
+const parseArguments = (args: Array<string>): Elements => {
+  if (args.length < 4) throw new Error('Give height and weight');
+  if (args.length > 4) throw new Error('Only give height and weight');
 
   if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
-    throw new Error('Give numbers only!')
+    throw new Error('Give numbers only!');
   }
-}
+};
 
 const calculateBmi = (height: number, weight: number): string => {
 
@@ -41,27 +41,26 @@ const calculateBmi = (height: number, weight: number): string => {
     default:
       return `Something bad happened with args ${height} and ${weight}`;
   }
-}
+};
 
-export const bmiEndpoint = (height: number, weight: number): object => {
+export const bmiEndpoint = (height: number, weight: number): string => {
   if (isNaN(Number(height)) || isNaN(Number(weight))) {
-    return {
+    return JSON.stringify({
       error: 'malformatted parameters'
-    }
+    });
   } else {
     const bmi = calculateBmi(height, weight);
-    return {
+    return JSON.stringify({
       weight,
       height,
       bmi
-    }
+    });
   }
-
-}
+};
 
 try {
-  const { height, weight } = parseArguments(process.argv)
-  console.log(calculateBmi(height, weight))
+  const { height, weight } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
 } catch (e) {
-  console.log(`Error: ${e.message}`)
+  console.log(`Error`);
 }
