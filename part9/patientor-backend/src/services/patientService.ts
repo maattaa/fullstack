@@ -1,6 +1,8 @@
 import patients from '../../data/patients';
 
-import { Patient, NonSensitivePatient } from '../types';
+import { Patient, NewPatientEntry, NonSensitivePatient } from '../types';
+
+import {v4 as uuidv4} from 'uuid';
 
 const getEntries = (): Patient[] => {
   return patients;
@@ -17,29 +19,12 @@ const getNonSensitivePatientEntires = (): NonSensitivePatient[] => {
 };
 
 
-//Generating guids, https://stackoverflow.com/a/26502275
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = Math.random() * 16 | 0,
-        v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
-}
-
-const addEntry = (
-  name: string, dateOfBirth: string, ssn: string, gender: string, occupation: string
-): Patient => {
+const addEntry = (entry: NewPatientEntry): Patient => {
+  const createId: string = uuidv4();
   const newPatientEntry = {
-    id: Guid.newGuid(),
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation
+    id: createId,
+    ...entry
   };
-
   patients.push(newPatientEntry);
   return newPatientEntry;
 };
