@@ -8,6 +8,7 @@ interface Result {
   average: number;
 }
 
+//This function is no longer required as it the validation is done in index.ts /exercises endpoint
 /* const checkArguments = (args: Array<string>): Array<number> => {
   args.forEach(a => {
     if (isNaN(Number(a))) {

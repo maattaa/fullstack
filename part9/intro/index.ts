@@ -1,7 +1,6 @@
 import express from 'express';
 import { bmiEndpoint } from './bmiCalculator';
 import { exerciseEndpoint } from './exerciseCalculator';
-//import {exerciseEndpoint} from './exerciseCalculator';
 
 const app = express();
 app.use(express.json());
@@ -44,10 +43,7 @@ app.post('/exercises', (req, res) => {
       paramsMalformatted();
     }
   });
-  console.log(body.daily_exercises, 'daily');
-  console.log(typeof(body.daily_exercises), 'typeof daily');
-  console.log(body.target, 'target');
-  console.log(typeof(body.target));
+
   const exerciseResult = exerciseEndpoint(body.daily_exercises, body.target);
   res.send(JSON.parse(exerciseResult));
 });
