@@ -1,6 +1,7 @@
 import { State } from "./state";
 import { Patient } from "../types";
 
+
 export type Action =
   | {
       type: "SET_PATIENT_LIST";
@@ -9,8 +10,14 @@ export type Action =
   | {
       type: "ADD_PATIENT";
       payload: Patient;
-    };
+    }
+  | {
+    //Update one patients
+      type: "SET_PATIENT";
+      payload: Patient;
+  };
 
+//TODO: Reduceri missä muokataan statea uudella potilaalla
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "SET_PATIENT_LIST":
@@ -25,6 +32,14 @@ export const reducer = (state: State, action: Action): State => {
         }
       };
     case "ADD_PATIENT":
+      return {
+        ...state,
+        patients: {
+          ...state.patients,
+          [action.payload.id]: action.payload
+        }
+      };
+    case "SET_PATIENT":
       return {
         ...state,
         patients: {

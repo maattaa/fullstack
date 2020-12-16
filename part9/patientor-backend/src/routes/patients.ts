@@ -29,6 +29,6 @@ try {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   res.status(400).send(e.message);
 }
-})
+});
 
 export default router;
