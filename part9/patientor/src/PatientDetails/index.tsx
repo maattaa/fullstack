@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
 import { Patient } from '../types';
-import { useStateValue } from '../state';
+import { setPatient, useStateValue } from '../state';
 
 const PatientDetails: React.FC = () => {
   const [{ patients }] = useStateValue();
@@ -16,7 +16,7 @@ const PatientDetails: React.FC = () => {
     const fetchPatient = async () => {
       try {
         const { data: patientFromApi } = await Axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
-        dispatch({ type: "SET_PATIENT", payload: patientFromApi });
+        dispatch(setPatient(patientFromApi));
       } catch (e) {
         console.error(e);
       }
