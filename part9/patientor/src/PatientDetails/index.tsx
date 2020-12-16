@@ -42,6 +42,21 @@ const PatientDetails: React.FC = () => {
         <h2>{patient.name} {genderIcon()} </h2>
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
+        <h3>entries</h3>
+        {patient.entries.map(entry => {
+          return (
+            <div key={entry.id}>
+              <p>{entry.date} {entry.description}</p>
+              <ul>
+                {entry.diagnosisCodes?.map(diagnose => {
+                  return(
+                  <li key={diagnose}>{diagnose}</li>
+                  )
+                })}
+              </ul>
+            </div>
+          )
+        })}
       </div>
     );
   } else {
