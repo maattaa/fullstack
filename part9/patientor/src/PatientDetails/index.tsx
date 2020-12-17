@@ -7,7 +7,7 @@ import { Patient } from '../types';
 import { setPatient, useStateValue } from '../state';
 
 const PatientDetails: React.FC = () => {
-  const [{ patients }] = useStateValue();
+  const [{ patients, diagnoses }] = useStateValue();
   const [, dispatch] = useStateValue();
   const { id } = useParams<Record<string, string | undefined>>();
   const patient = Object.values(patients).find(p => p.id === id);
@@ -24,6 +24,7 @@ const PatientDetails: React.FC = () => {
     fetchPatient();
   }, [id, dispatch]);
 
+  
   const genderIcon = () => {
     if (patient) {
       if (patient.gender === "male") {
@@ -34,6 +35,11 @@ const PatientDetails: React.FC = () => {
         return <Icon name="other gender" />;
       }
     }
+  };
+
+  const diagnoseName = (diagnoseCode: string): string => {
+    const diagnose = Object.values(diagnoses).find(d => d.code === diagnoseCode);
+    return (diagnose?.name || '');
   };
 
   if (patient) {
@@ -50,12 +56,12 @@ const PatientDetails: React.FC = () => {
               <ul>
                 {entry.diagnosisCodes?.map(diagnose => {
                   return(
-                  <li key={diagnose}>{diagnose}</li>
-                  )
+                  <li key={diagnose}>{diagnose} {diagnoseName(diagnose)}</li>
+                  );
                 })}
               </ul>
             </div>
-          )
+          );
         })}
       </div>
     );

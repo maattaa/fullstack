@@ -1,8 +1,3 @@
-export interface DiagnoseEntry {
-  code: string;
-  name: string;
-  latin?: string;
-}
 
 //Patient related
 
@@ -29,6 +24,12 @@ export type NonSensitivePatient = Omit<Patient, 'ssn'>;
 export type NewPatientEntry = Omit<Patient, 'id'>;
 
 //Entry related
+
+export interface DiagnoseEntry {
+  code: string;
+  name: string;
+  latin?: string;
+}
 
 interface BaseEntry {
   id: string;

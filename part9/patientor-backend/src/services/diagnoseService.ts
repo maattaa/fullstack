@@ -6,8 +6,12 @@ const getEntires = (): Array<DiagnoseEntry> => {
   return diagnoses;
 };
 
-const addEntry = (): null => {
-  return null;
+const addEntry = (entry: DiagnoseEntry): DiagnoseEntry => {
+  const newDiagnoseEntry = {
+    ...entry
+  };
+  diagnoses.push(newDiagnoseEntry);
+  return newDiagnoseEntry;
 };
 
 export default {
