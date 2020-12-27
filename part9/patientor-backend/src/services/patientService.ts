@@ -19,7 +19,7 @@ const getNonSensitivePatientEntires = (): NonSensitivePatient[] => {
   }));
 };
 
-const getFullPatient = (entry: string) => {
+const getFullPatient = (entry: string): Patient | undefined => {
   return  patients.find(p => p.id === entry);
 };
 

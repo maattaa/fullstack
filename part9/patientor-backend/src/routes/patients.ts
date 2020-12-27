@@ -1,5 +1,7 @@
 import express from 'express';
 import patientService from '../services/patientService';
+import entryService from '../services/entryService';
+import { Patient } from '../types';
 import toNewPatientEntry from '../utils';
 
 const router = express.Router();
@@ -20,10 +22,24 @@ router.post('/', (req, res) => {
   }
 });
 
+router.post('/:id/entries', (req, res) => {
+  console.log('kutsuttu');
+  try {
+
+    const patientId: string = req.params.id;
+    const patient: Patient | undefined = patientService.getFullPatient(patientId);
+    const addEntry = entryService.addEntry(req.body, patient);
+    res.json(addEntry);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    res.status(400).send(e.message);
+  }
+});
+
 router.get('/:id', (req, res) => {
 try {
   const id: string = req.params.id;
-  const patient = patientService.getFullPatient(id);
+  const patient: Patient | undefined = patientService.getFullPatient(id);
   res.send(patient);
 } catch (e) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

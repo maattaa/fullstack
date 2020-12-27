@@ -64,11 +64,6 @@ const PatientDetails: React.FC = () => {
     }
   };
 
-  /*   const diagnoseName = (diagnoseCode: string): string => {
-      const diagnose = Object.values(diagnoses).find(d => d.code === diagnoseCode);
-      return (diagnose?.name || '');
-    }; */
-
   if (patient) {
     return (
       <div>
@@ -78,19 +73,6 @@ const PatientDetails: React.FC = () => {
         <h3>entries</h3>
         {patient.entries.map(entry => {
           return <EntryDetails key={entry.id} entry={entry} diagnoses={Object.values(diagnoses)} />;
-
-          /*           return (
-                      <div key={entry.id}>
-                        <p>{entry.date} {entry.description}</p>
-                        <ul>
-                          {entry.diagnosisCodes?.map(diagnose => {
-                            return (
-                              <li key={diagnose}>{diagnose} {diagnoseName(diagnose)}</li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    ); */
         })}
       </div >
     );
@@ -107,12 +89,6 @@ const PatientDetails: React.FC = () => {
 
 //These should be moved into separate file if used somewhere else than here
 
-/* const diagnoseNameSeparate: React.FC<{diagnoseCode: Entry["diagnosisCodes"]}> = ({diagnoseCode}) => {
-  const [{ diagnoses }] = useStateValue();
-  const diagnose = Object.values(diagnoses).find(d => d.code === diagnoseCode);
-  return (diagnose?.name || '');
-}; */
-
 const assertNever = (value: unknown): never => {
   throw new Error(`Unhandled value: ${value}`);
 };
@@ -124,9 +100,6 @@ const EntryDetails: React.FC<{
 }> = ({ entry, diagnoses }) => {
 
   const diagnosisArray = diagnoses.filter(diagnose => entry.diagnosisCodes?.includes(diagnose.code));
-  /*   entry.diagnosisCodes?.map(code => {
-      diagnoses.find(d => d.code === code);
-    }); */
 
   switch (entry.type) {
     case "Hospital":
@@ -182,9 +155,7 @@ const OccupationalEntryRecord: React.FC<{ entry: OccupationalHealthcareEntry; di
           </div>
         );
       })}
-
       <p style={diagnosisDescriptionStyle}>{entry.description}</p>
-
       {leaveDates}
     </div>
   );
@@ -192,11 +163,25 @@ const OccupationalEntryRecord: React.FC<{ entry: OccupationalHealthcareEntry; di
 
 const HealthCheckEntryRecord: React.FC<{ entry: HealthCheckEntry; diagnosisArray: Diagnosis[] }> = ({ entry, diagnosisArray }) => {
 
-  const color = entry.healthCheckRating === 1 ? "orange" : "green";
+
+  const colour = () => {
+    switch (entry.healthCheckRating) {
+      case 0:
+        return "green";
+      case 1:
+        return "olive";
+      case 2:
+        return "orange";
+      case 3:
+        return "red";
+      default:
+        return "black";
+    }
+  };
 
   return (
     <div key={entry.id} style={divStyles}>
-      <h3 style={headingStyle}>{entry.date} <Icon name="heart" size="big" color={color} /> </h3>
+      <h3 style={headingStyle}>{entry.date} <Icon name="heart" size="big" color={colour()} /> </h3>
 
       <p style={diagnosisDescriptionStyle}>{entry.description}</p>
 
