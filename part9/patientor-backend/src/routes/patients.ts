@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
 });
 
 router.post('/:id/entries', (req, res) => {
-  console.log('kutsuttu');
+
   try {
 
     const patientId: string = req.params.id;

@@ -163,7 +163,6 @@ const OccupationalEntryRecord: React.FC<{ entry: OccupationalHealthcareEntry; di
 
 const HealthCheckEntryRecord: React.FC<{ entry: HealthCheckEntry; diagnosisArray: Diagnosis[] }> = ({ entry, diagnosisArray }) => {
 
-
   const colour = () => {
     switch (entry.healthCheckRating) {
       case 0:
