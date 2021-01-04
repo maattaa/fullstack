@@ -66,6 +66,10 @@ const isArrayOfStrings = (param: unknown): param is string[] => {
 };
 
 const parseDiagnosisCodes = (value: unknown): string[] => {
+  console.log(value);
+  if (!value) {
+    return [];
+  }
   if (!isArrayOfStrings(value)) {
     throw new Error(`Incorrect or missing diagnosis codes: ${String(value)}`);
   }

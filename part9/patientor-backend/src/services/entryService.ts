@@ -6,8 +6,6 @@ import {
 import { toNewEntry } from '../utils';
 
 const addEntry = (entry: Entry, patient?: Patient): Entry => {
-  console.log(entry);
-  console.log(typeof(entry.diagnosisCodes));
   const parsedEntry = toNewEntry(entry);
 
   try {
