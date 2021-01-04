@@ -120,7 +120,7 @@ const HospitalEntryRecord: React.FC<{ entry: HospitalEntry; diagnosisArray: Diag
       <div style={diagnosisEntryStyle}>
         {diagnosisArray?.map(diagnose => {
           return (
-            <div >
+            <div key={diagnose.code} >
               <p>{diagnose.code} <i>{diagnose.latin}</i> <br></br>
                 {diagnose.name}</p>
               <p></p>
@@ -148,7 +148,7 @@ const OccupationalEntryRecord: React.FC<{ entry: OccupationalHealthcareEntry; di
         {entry.employerName} </h3>
       {diagnosisArray?.map(diagnose => {
         return (
-          <div style={diagnosisEntryStyle}>
+          <div style={diagnosisEntryStyle} key={diagnose.code}>
             <p>{diagnose.code} <i>{diagnose.latin}</i> <br></br>
               {diagnose.name}</p>
             <p></p>

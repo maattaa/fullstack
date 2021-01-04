@@ -25,8 +25,6 @@ const PatientListPage: React.FC = () => {
     setError(undefined);
   };
 
-  console.log(patients);
-
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
       const { data: newPatient } = await axios.post<Patient>(
