@@ -1,11 +1,14 @@
-import Axios from 'axios';
+import axios from 'axios';
 import React from 'react';
 import CSS from 'csstype';
 import { useParams } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
 import { Patient, Entry, OccupationalHealthcareEntry, Diagnosis, HealthCheckEntry, HospitalEntry } from '../types';
 import { setPatient, useStateValue } from '../state';
+import AddEntryForm from '../AddEntryModal';
+import { HealthCheckEntryValues } from '../AddEntryModal/AddEntryForm';
+import { addEntry } from "../state";
 
 const divStyles: CSS.Properties = {
   color: 'darkgrey',
@@ -34,15 +37,16 @@ const diagnosisEntryStyle: CSS.Properties = {
 };
 
 const PatientDetails: React.FC = () => {
-  const [{ patients, diagnoses }] = useStateValue();
-  const [, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<Record<string, string | undefined>>();
   const patient = Object.values(patients).find(p => p.id === id);
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
 
   React.useEffect(() => {
     const fetchPatient = async () => {
       try {
-        const { data: patientFromApi } = await Axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
+        const { data: patientFromApi } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
         dispatch(setPatient(patientFromApi));
       } catch (e) {
         console.error(e);
@@ -64,13 +68,46 @@ const PatientDetails: React.FC = () => {
     }
   };
 
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: HealthCheckEntryValues) => {
+    console.log(values);
+    if (patient) {
+      try {
+        const { data: newEntry } = await axios.post<HealthCheckEntry>(
+          `${apiBaseUrl}/patients/${patient?.id}/entries`,
+          values
+        );
+        console.log(newEntry);
+        dispatch(addEntry(newEntry, patient.id));
+        closeModal();
+      } catch (e) {
+        console.error(e.response.data);
+        setError(e.response.data.error);
+      }
+    }
+  };
+
+
   if (patient) {
     return (
       <div>
         <h2>{patient.name} {genderIcon()} </h2>
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
-        <h3>entries</h3>
+        <h3>entries
+          <AddEntryForm
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            error={error}
+            onClose={closeModal} />
+          <Button color="blue" onClick={() => openModal()}>Add New Entry</Button>
+        </h3>
         {patient.entries.map(entry => {
           return <EntryDetails key={entry.id} entry={entry} diagnoses={Object.values(diagnoses)} />;
         })}
@@ -186,7 +223,7 @@ const HealthCheckEntryRecord: React.FC<{ entry: HealthCheckEntry; diagnosisArray
 
       {diagnosisArray?.map(diagnose => {
         return (
-          <div style={diagnosisEntryStyle}>
+          <div style={diagnosisEntryStyle} key={diagnose.code}>
             <p>{diagnose.code} <b></b>
               <i>{diagnose.latin}</i> <b></b>
               {diagnose.name}</p>

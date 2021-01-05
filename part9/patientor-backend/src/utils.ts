@@ -62,10 +62,11 @@ const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRatingEn
 };
 
 const isArrayOfStrings = (param: unknown): param is string[] => {
-  return Array.isArray(param) && param.every((value: unknown) => typeof value === 'string') && param.every(value => value instanceof String);
+  return Array.isArray(param) && param.every((value: unknown) => typeof value === 'string');
 };
 
 const parseDiagnosisCodes = (value: unknown): string[] => {
+  console.log(value);
   if (!value) {
     return [];
   }
