@@ -76,14 +76,12 @@ const PatientDetails: React.FC = () => {
   };
 
   const submitNewEntry = async (values: HealthCheckEntryValues) => {
-    console.log(values);
     if (patient) {
       try {
         const { data: newEntry } = await axios.post<HealthCheckEntry>(
           `${apiBaseUrl}/patients/${patient?.id}/entries`,
           values
         );
-        console.log(newEntry);
         dispatch(addEntry(newEntry, patient.id));
         closeModal();
       } catch (e) {
